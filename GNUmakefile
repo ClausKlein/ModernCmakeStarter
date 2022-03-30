@@ -43,7 +43,7 @@ check: $(BUILD_DIR)/compile_commands.json
 
 setup: $(BUILD_DIR)/compile_commands.json
 $(BUILD_DIR)/compile_commands.json:
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) 
+	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP)
 
 test_install: install distclean
 	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) -D TEST_INSTALLED_VERSION=1
