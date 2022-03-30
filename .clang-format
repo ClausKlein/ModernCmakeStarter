@@ -1,4 +1,5 @@
 ---
+  # clang-format v12.0.0
   BasedOnStyle: Google
   AccessModifierOffset: '-2'
   AlignTrailingComments: 'true'
