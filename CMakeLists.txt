@@ -6,38 +6,39 @@ set(CMAKE_CXX_STANDARD 20)
 
 # strongly encouraged to enable this globally to avoid conflicts between -Wpedantic being enabled
 # and -std=c++20 and -std=gnu++20 for example when compiling with PCH enabled
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_EXTENSIONS NO)
+
+# to be prepared for clang-tools usage!
+set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
+
+# setup fix project configuration default options:
+set(ENABLE_PCH_DEFAULT NO) # for user and developer builds
+set(ENABLE_CPPCHECK_DEFAULT NO) # for user and developer builds
+set(ENABLE_CLANG_TIDY_DEFAULT NO) # for user and developer builds
 
 # ---- Project ----
 
 # Note: update this to your new project's name and version
 project(
   greeter
-  VERSION 1.1
+  VERSION 1.0
   LANGUAGES CXX
 )
 
-# Note: by default ENABLE_DEVELOPER_MODE is True This means that all analysis (sanitizers, static
-# analysis) is enabled and all warnings are treated as errors if you want to switch this behavior,
-# change TRUE to FALSE
-set(ENABLE_DEVELOPER_MODE
-    ${PROJECT_IS_TOP_LEVEL}
-    CACHE BOOL "Enable 'developer mode'"
-)
-# Change this to false if you want to disable warnings_as_errors in developer mode
-set(OPT_WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT ${PROJECT_IS_TOP_LEVEL})
+# to get CMAKE_INSTALL_INCLUDEDIR
+include(GNUInstallDirs)
 
 # ---- Add dependencies via CPM ----
 # see https://github.com/TheLartians/CPM.cmake for more info
 
 include(cmake/CPM.cmake)
 
-# https://github.com/aminya/project_options/tree/v0.20.0
+# see https://github.com/aminya/project_options for more info
 CPMAddPackage("gh:aminya/project_options@0.20.0")
 list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
 
 # PackageProject.cmake will be used to make our target installable
-CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
+# XXX CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
 
 CPMAddPackage(
   NAME fmt
@@ -47,13 +48,13 @@ CPMAddPackage(
 )
 
 include(DynamicProjectOptions)
-# Initialize project_options variable related to this project This overwrites `project_options` and
-# sets `project_warnings` uncomment the options to enable them:
+# Initialize project_options variable related to this project
+# This overwrites `project_options` and sets `project_warnings`
+# uncomment the options to enable them:
 dynamic_project_options(
-  # MSVC_WARNINGS    # Override the defaults for the MSVC warnings
-  # CLANG_WARNINGS   # Override the defaults for the CLANG warnings
-  # GCC_WARNINGS     # Override the defaults for the GCC warnings
-  # CPPCHECK_OPTIONS # Override the defaults for CppCheck
+  # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
+  # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
+  # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
 )
 target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
@@ -61,10 +62,10 @@ target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
-# XXX file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
-# XXX file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
-set(_headers source/greeter.cpp)
-set(_sources include/greeter/greeter.h)
+# XXX file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+# XXX file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+set(headers source/greeter.cpp)
+set(sources include/greeter/greeter.h)
 
 # ---- Create library ----
 
@@ -80,8 +81,11 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd fo
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
-target_link_libraries(${PROJECT_NAME} PRIVATE project_options)
 
+# FIXME: should be PRIVATE! CK
+target_link_libraries(${PROJECT_NAME} PUBLIC project_options project_warnings)
+
+target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
 # target_include_directories with the SYSTEM modifier will request the compiler
 # to omit warnings from the provided paths, if the compiler supports that
 target_include_directories(
@@ -93,14 +97,25 @@ if(CMAKE_SKIP_INSTALL_RULES)
   return()
 endif()
 
+if(NOT PROJECT_IS_TOP_LEVEL)
+  return()
+endif()
+
 # ---- Create an installable target ----
 # this allows users to install and find the library via `find_package()`.
 
 # Add other targets that you want installed here, be default we just package the one executable we
 # know we want to ship
 package_project(
-  TARGETS ${PROJECT_NAME} project_options PUBLIC_DEPENDENCIES_CONFIGURED "fmt 8.1.1"
-  #NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options
+  TARGETS
+  ${PROJECT_NAME}
+  project_options
+  project_warnings
+  PUBLIC_DEPENDENCIES_CONFIGURED
+  "fmt 8.1.1"
+  # XXX NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
+  PUBLIC_INCLUDES
+  ${PROJECT_SOURCE_DIR}/include
 )
 
 # the location where the project's version header will be placed should match the project's regular

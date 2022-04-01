@@ -10,6 +10,10 @@ export CPM_USE_LOCAL_PACKAGES=NO
 export CPM_SOURCE_CACHE=${HOME}/.cache/CPM
 
 # see https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
+export CMAKE_BUILD_TYPE=Debug
+# export CMAKE_C_COMPILER_LAUNCHER=ccache
+# export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+export CMAKE_EXPORT_COMPILE_COMMANDS=YES
 export CMAKE_GENERATOR=Ninja
 export CMAKE_BUILD_TYPE=Debug
 ####################################
@@ -29,7 +33,8 @@ STAGE_DIR:=$(shell realpath $(CURDIR)/../stage)
 
 PROJECT:=$(shell basename $(CURDIR))
 BUILD_DIR:=./build-${PROJECT}-${CMAKE_BUILD_TYPE}
-CMAKE_SETUP:=-D CMAKE_STAGING_PREFIX=$(STAGE_DIR)/$(INSTALL_PREFIX) -D CMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
+STAGE_DIR:=$(shell realpath $(CURDIR)/../stage)
+CMAKE_SETUP:=-D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -D CMAKE_STAGING_PREFIX=$(STAGE_DIR) #XXX -D USE_SANITIZER=Thread
 
 .PHONY: setup eclipse all test gcov install test_install clean distclean check format
 all: setup
@@ -38,10 +43,9 @@ all: setup
 test: all
 	cmake --build $(BUILD_DIR)/all --target $@
 
-install: # test
-	cmake -B $(BUILD_DIR) -S $(CURDIR) $(CMAKE_SETUP) -D OPT_ENABLE_COVERAGE=NO -DOPT_WARNINGS_AS_ERRORS=NO
-	cmake --build $(BUILD_DIR)
-	DESTDIR=$(STAGE_DIR) cmake --install $(BUILD_DIR) --prefix $(INSTALL_PREFIX)
+install: # TODO: test
+	cmake -B $(BUILD_DIR) -S $(CURDIR)/all -D USE_SANITIZER=""
+	DESTDIR=$(STAGE_DIR) cmake --install $(BUILD_DIR) --prefix /
 
 check: $(BUILD_DIR)/all/compile_commands.json
 	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $<
@@ -53,8 +57,11 @@ $(BUILD_DIR)/all/compile_commands.json:
 
 ################################
 
+################################
+>>>>>>> 2365824 (refactory cmake project concept)
+
 test_install: install distclean
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) -D TEST_INSTALLED_VERSION=YES
+	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) #XXX -D TEST_INSTALLED_VERSION=1
 	cmake --build $(BUILD_DIR) --target all
 	cmake --build $(BUILD_DIR) --target test
 
