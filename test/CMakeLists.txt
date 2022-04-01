@@ -5,11 +5,10 @@ project(GreeterTests LANGUAGES CXX)
 # ---- Options ----
 
 option(ENABLE_TEST_COVERAGE "Enable test coverage" OFF)
-option(TEST_INSTALLED_VERSION "Test the version found by find_package" OFF)
 
 # --- Import tools ----
 
-# include(../cmake/tools.cmake)
+include(../cmake/tools.cmake)
 
 # ---- Dependencies ----
 
@@ -25,14 +24,25 @@ endif()
 
 # ---- Create binary ----
 
-file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+# XXX file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+set(sources source/greeter.cpp)
+
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest::doctest Greeter::Greeter)
+target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
+
 if(PROJECT_IS_TOP_LEVEL)
-  target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+  target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_${CMAKE_CXX_STANDARD})
+else()
+
+  # ---- TODO: code coverage the old way! ----
+
+  if(ENABLE_TEST_COVERAGE)
+    target_compile_options(greeter PUBLIC -O0 -g -fprofile-arcs -ftest-coverage)
+    target_link_options(greeter PUBLIC -fprofile-arcs -ftest-coverage)
+  endif()
 endif()
 
-# ---- Add GreeterTests ----
+# ---- Add tests for ctest ----
 
 enable_testing()
 
@@ -42,10 +52,3 @@ enable_testing()
 
 include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
 doctest_discover_tests(${PROJECT_NAME})
-
-# ---- code coverage ----
-
-if(ENABLE_TEST_COVERAGE AND PROJECT_IS_TOP_LEVEL)
-  target_compile_options(Greeter PUBLIC -O0 -g -fprofile-arcs -ftest-coverage)
-  target_link_options(Greeter PUBLIC -fprofile-arcs -ftest-coverage)
-endif()
