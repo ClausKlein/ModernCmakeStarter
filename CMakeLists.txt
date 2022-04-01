@@ -1,7 +1,4 @@
-#
-# this project is for using as a sub project with add_subdirectory() or with CPMAddPackage()
-#
-cmake_minimum_required(VERSION 3.21...3.24)
+cmake_minimum_required(VERSION 3.21...3.23)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
 # the same version
@@ -9,15 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # strongly encouraged to enable this globally to avoid conflicts between -Wpedantic being enabled
 # and -std=c++20 and -std=gnu++20 for example when compiling with PCH enabled
-set(CMAKE_CXX_EXTENSIONS NO)
-
-# setup fix project configuration default options:
-set(ENABLE_PCH_DEFAULT NO) # for user and developer builds
-
-# It is strongly recomonded to NOT use this as precompile step!
-set(ENABLE_CPPCHECK_DEFAULT NO) # for user and developer builds
-# run_clang-tdiy -p build-dir ...
-set(ENABLE_CLANG_TIDY_DEFAULT NO) # for user and developer builds
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ---- Project ----
 
@@ -28,18 +17,24 @@ project(
   LANGUAGES CXX
 )
 
-# to get CMAKE_INSTALL_INCLUDEDIR
-include(GNUInstallDirs)
+# Note: by default ENABLE_DEVELOPER_MODE is True This means that all analysis (sanitizers, static
+# analysis) is enabled and all warnings are treated as errors if you want to switch this behavior,
+# change TRUE to FALSE
+set(ENABLE_DEVELOPER_MODE
+    ${PROJECT_IS_TOP_LEVEL}
+    CACHE BOOL "Enable 'developer mode'"
+)
+# Change this to false if you want to disable warnings_as_errors in developer mode
+set(OPT_WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT ${PROJECT_IS_TOP_LEVEL})
 
 # ---- Add dependencies via CPM ----
 # see https://github.com/TheLartians/CPM.cmake for more info
 
 include(cmake/CPM.cmake)
 
-# see https://github.com/aminya/project_options for more info
-CPMAddPackage("gh:aminya/project_options@0.25.1")
+# https://github.com/aminya/project_options/tree/v0.20.0
+CPMAddPackage("gh:aminya/project_options@0.20.0")
 list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
-#XXX list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR})
 
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
@@ -51,21 +46,16 @@ CPMAddPackage(
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
 
-# ---- Setup default project_options ----
-
 include(DynamicProjectOptions)
-# Initialize project_options variable related to this project
-# This overwrites `project_options` and sets `project_warnings`
-# uncomment the options to enable them:
-# cmake-format: off
+# Initialize project_options variable related to this project This overwrites `project_options` and
+# sets `project_warnings` uncomment the options to enable them:
 dynamic_project_options(
-  PREFIX ${PROJECT_NAME}
-  # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
-  # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
-  # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
+  # MSVC_WARNINGS    # Override the defaults for the MSVC warnings
+  # CLANG_WARNINGS   # Override the defaults for the CLANG warnings
+  # GCC_WARNINGS     # Override the defaults for the GCC warnings
+  # CPPCHECK_OPTIONS # Override the defaults for CppCheck
 )
-# cmake-format: on
-target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # ---- Add source files ----
 
@@ -80,8 +70,9 @@ set(_sources include/greeter/greeter.h)
 
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
 # target: add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME} ${_headers} ${_sources})
+add_library(${PROJECT_NAME} ${headers} ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_${CMAKE_CXX_STANDARD})
 
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
@@ -89,7 +80,7 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd fo
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
-target_disable_clang_tidy(fmt)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_options)
 
 # target_include_directories with the SYSTEM modifier will request the compiler
 # to omit warnings from the provided paths, if the compiler supports that
@@ -99,30 +90,23 @@ target_include_directories(
 )
 
 if(CMAKE_SKIP_INSTALL_RULES)
-  # FIXME: should be PRIVATE! CK
-  target_link_libraries(
-    ${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_project_warnings ${PROJECT_NAME}_project_options
-  )
   return()
 endif()
 
 # ---- Create an installable target ----
 # this allows users to install and find the library via `find_package()`.
 
-# Add other targets that you want installe here. Or be default we just package
-# all targets recursively found for the current folder if not specified.
+# Add other targets that you want installed here, be default we just package the one executable we
+# know we want to ship
 package_project(
-  NAME ${PROJECT_NAME}
-  TARGETS ${PROJECT_NAME} # XXX project_options project_warnings
-  PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
-  PUBLIC_DEPENDENCIES_CONFIGURED "fmt 8.1.1"
-  # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
+  TARGETS ${PROJECT_NAME} project_options PUBLIC_DEPENDENCIES_CONFIGURED "fmt 8.1.1"
+  #NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options
 )
 
 # the location where the project's version header will be placed should match the project's regular
 # header paths
 # string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
-
+#
 # packageProject(
 #   NAME ${PROJECT_NAME}
 #   VERSION ${PROJECT_VERSION}
@@ -130,10 +114,9 @@ package_project(
 #   BINARY_DIR ${PROJECT_BINARY_DIR}
 #   INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
 #   INCLUDE_DESTINATION include/${PROJECT_NAME}
-#   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
-#   DISABLE_VERSION_SUFFIX YES
+#   VERSION_HEADER "${VERSION_HEADER_LOCATION}" DISABLE_VERSION_SUFFIX YES
 #   COMPATIBILITY SameMajorVersion
-#   DEPENDENCIES "fmt 8.1.1"
+#   DEPENDENCIES "fmt 8.1.1; project_options"
 # )
 
 include(CPack)

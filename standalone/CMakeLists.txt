@@ -23,5 +23,4 @@ set(_sources source/main.cpp)
 
 add_executable(${PROJECT_NAME} ${_sources})
 
-target_link_libraries(${PROJECT_NAME} greeter::greeter cxxopts)
-target_disable_clang_tidy(cxxopts)
+target_link_libraries(${PROJECT_NAME} Greeter::Greeter cxxopts)
