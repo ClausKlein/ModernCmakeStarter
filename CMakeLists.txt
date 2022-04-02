@@ -13,7 +13,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
 # setup fix project configuration default options:
 set(ENABLE_PCH_DEFAULT NO) # for user and developer builds
+
+# strongly recomonded to NOT use this as precompile step!
 set(ENABLE_CPPCHECK_DEFAULT NO) # for user and developer builds
+# run_clang-tdiy -p build-dir ...
 set(ENABLE_CLANG_TIDY_DEFAULT NO) # for user and developer builds
 
 # ---- Project ----
@@ -53,11 +56,13 @@ include(DynamicProjectOptions)
 # Initialize project_options variable related to this project
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment the options to enable them:
+# cmake-format: off
 dynamic_project_options(
   # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
   # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
   # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
 )
+# cmake-format: on
 target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # ---- Add source files ----

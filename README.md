@@ -1,9 +1,8 @@
-[![MacOS](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/macos.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/macos.yml)
-[![Install](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/install.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/install.yml)
-[![Ubuntu](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/ubuntu.yml)
-[![Windows](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/windows.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/windows.yml)
-[![Standalone](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/standalone.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/standalone.yml)
-[![Style](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/style.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/style.yml)
+[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/MacOS/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
+[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Windows/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
+[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Ubuntu/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
+[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Style/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
+[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Install/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
 
 <p align="center">
   <img src="https://repository-images.githubusercontent.com/254842585/4dfa7580-7ffb-11ea-99d0-46b8fe2f4170" height="175" width="auto" />
@@ -26,9 +25,10 @@ This template is the result of learnings from many previous projects and should 
 - Code formatting enforced by [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [cmake-format](https://github.com/cheshirekow/cmake_format) via [Format.cmake](https://github.com/TheLartians/Format.cmake)
 - Reproducible dependency management via [CPM.cmake](https://github.com/TheLartians/CPM.cmake)
 - Installable target with automatic versioning information and header generation via [PackageProject.cmake](https://github.com/TheLartians/PackageProject.cmake)
+- Automatic [documentation](https://thelartians.github.io/ModernCppStarter) and deployment with [Doxygen](https://www.doxygen.nl) and [GitHub Pages](https://pages.github.com)
 - Configurable support for [sanitizer tools, and more](#additional-tools)
 
-### New Features added
+## New Features added
 
 Alternatively you may use the [flexible project options](https://github.com/aminya/project_options#readme). It provides different cmake functions such:
 
@@ -38,9 +38,6 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 - `run_vcpkg()`
 - `target_link_system_libraries()`
 - and [conan](https://docs.conan.io/en/latest/) for dependency management.
-- [CMake presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html)
-- [Build a project with presets](https://cmake.org/cmake/help/latest/manual/cmake.1.html#build-a-project)
-
 
 ## Usage
 
@@ -54,14 +51,8 @@ convenient to [build all subprojects at once](#build-everything-at-once).
 
 see [test/CMakePresets.json](test/CMakePresets.json)
 
-```bash
-cd test
-cmake --preset=ninja-multi
-cmake --build --preset=ninja-multi --config Release
-cmake --build --preset=ninja-multi --config Release --target help
-ctest --preset=ninja-multi   --build-config Release
-gcovr -r ..
-```
+To cleanly separate the library and subproject code, the outer `CMakeList.txt` only defines the library itself while the tests and other subprojects are self-contained in their own directories.
+During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
 
 ### Build and run the standalone target
 
