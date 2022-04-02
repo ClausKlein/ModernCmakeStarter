@@ -47,7 +47,7 @@ check: $(BUILD_DIR)/compile_commands.json
 	# find $(BUILD_DIR) -name '*.h' | \
 	#   xargs perl -i -p -e 's/#include \/\*\*\/ "((ace|tao)[^"]+)"/#include <$$1>/;' \
 	#                    -e 's/#include "((ace|tao)[^"]+)"/#include <$$1>/;'
-	perl -i.bak -p -e 's#-W[-\w]+\b##g;' -e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $(BUILD_DIR)/compile_commands.json
+	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $(BUILD_DIR)/compile_commands.json
 	run-clang-tidy -p $(BUILD_DIR) $(CURDIR)
 
 setup: $(BUILD_DIR)/compile_commands.json
