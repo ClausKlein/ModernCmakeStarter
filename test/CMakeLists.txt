@@ -13,7 +13,8 @@ include(../cmake/tools.cmake)
 
 # ---- Dependencies ----
 
-CPMAddPackage("gh:doctest/doctest@2.4.8")
+# XXX CPMAddPackage("gh:doctest/doctest@2.4.8")
+CPMAddPackage("gh:iboB/doctest-lib@2.4.8")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 
 if(TEST_INSTALLED_VERSION) # FIXME: if(PROJECT_IS_TOP_LEVEL)
@@ -29,18 +30,11 @@ endif()
 set(sources source/greeter.cpp)
 
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
+target_link_libraries(${PROJECT_NAME} doctest-main greeter::greeter)
 
 if(PROJECT_IS_TOP_LEVEL)
-  # XXX target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_${CMAKE_CXX_STANDARD})
-else()
+  target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
-  # ---- TODO: code coverage the old way! ----
-
-  if(ENABLE_TEST_COVERAGE)
-    target_compile_options(greeter PUBLIC -O0 -g -fprofile-arcs -ftest-coverage)
-    target_link_options(greeter PUBLIC -fprofile-arcs -ftest-coverage)
-  endif()
 endif()
 
 # ---- Add tests for ctest ----
@@ -49,7 +43,14 @@ enable_testing()
 
 # Note: doctest and similar testing frameworks can automatically configure CMake tests.
 # For other # testing frameworks add the tests target instead:
-# add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
-include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
-doctest_discover_tests(${PROJECT_NAME})
+# XXX include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
+# XXX doctest_discover_tests(${PROJECT_NAME})
+
+# ---- TODO: code coverage the old way! ----
+
+if(ENABLE_TEST_COVERAGE)
+  target_compile_options(greeter PUBLIC -O0 -g -fprofile-arcs -ftest-coverage)
+  target_link_options(greeter PUBLIC -fprofile-arcs -ftest-coverage)
+endif()
