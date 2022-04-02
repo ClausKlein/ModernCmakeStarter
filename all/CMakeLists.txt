@@ -12,8 +12,9 @@ set(ENABLE_DEVELOPER_MODE
     ON # ${PROJECT_IS_TOP_LEVEL}
     CACHE BOOL "Enable 'developer mode'"
 )
-# Change this to false if you want to disable warnings_as_errors in developer mode
+# Change this to OFF if you want to disable warnings_as_errors in developer mode
 set(WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT ON)
+set(ENABLE_COVERAGE_DEVELOPER_DEFAULT ON)
 
 include(../cmake/tools.cmake)
 

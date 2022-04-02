@@ -10,19 +10,26 @@ export CPM_USE_LOCAL_PACKAGES=NO
 export CPM_SOURCE_CACHE=${HOME}/.cache/CPM
 
 # see https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html
-export CMAKE_BUILD_TYPE=Debug
-# export CMAKE_C_COMPILER_LAUNCHER=ccache
-# export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-export CMAKE_EXPORT_COMPILE_COMMANDS=YES
 export CMAKE_GENERATOR=Ninja
+export CMAKE_BUILD_TYPE=Debug
+####################################
+
+export CMAKE_CONFIG_TYPE=${CMAKE_BUILD_TYPE}
+export CMAKE_CONFIGURATION_TYPES=${CMAKE_BUILD_TYPE}
+# export CMAKE_C_COMPILER_LAUNCHER=/usr/bin/ccache
+# export CMAKE_CXX_COMPILER_LAUNCHER=/usr/bin/ccache
+export CMAKE_EXPORT_COMPILE_COMMANDS=YES
 export CMAKE_NO_VERBOSE=YES
 
 export CTEST_OUTPUT_ON_FAILURE=YES
 
+INSTALL_PREFIX:=/
+STAGE_DIR:=$(shell realpath $(CURDIR)/../stage)
+####################################
+
 PROJECT:=$(shell basename $(CURDIR))
 BUILD_DIR:=./build-${PROJECT}-${CMAKE_BUILD_TYPE}
-STAGE_DIR:=$(shell realpath $(CURDIR)/../stage)
-CMAKE_SETUP:=-D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -D CMAKE_STAGING_PREFIX=$(STAGE_DIR) # -D CMAKE_CXX_STANDARD=20 #XXX -D USE_SANITIZER=Thread
+CMAKE_SETUP:=-D CMAKE_STAGING_PREFIX=$(STAGE_DIR) -D CMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
 
 .PHONY: setup eclipse all test gcov install test_install clean distclean check format
 all: setup
@@ -30,10 +37,11 @@ all: setup
 
 test: all
 	cmake --build $(BUILD_DIR) --target $@
+	gcovr $(BUILD_DIR)
 
 install: test
 	cmake -B $(BUILD_DIR) -S $(CURDIR)/all -D USE_SANITIZER=""
-	DESTDIR=$(STAGE_DIR) cmake --install $(BUILD_DIR) --prefix /
+	DESTDIR=$(STAGE_DIR) cmake --install $(BUILD_DIR) --prefix $(INSTALL_PREFIX)
 
 check: $(BUILD_DIR)/compile_commands.json
 	# find $(BUILD_DIR) -name '*.h' | \

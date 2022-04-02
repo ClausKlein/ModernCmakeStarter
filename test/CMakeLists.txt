@@ -13,8 +13,7 @@ include(../cmake/tools.cmake)
 
 # ---- Dependencies ----
 
-# XXX CPMAddPackage("gh:doctest/doctest@2.4.8")
-CPMAddPackage("gh:iboB/doctest-lib@2.4.8")
+CPMAddPackage("gh:doctest/doctest@2.4.8")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 
 if(TEST_INSTALLED_VERSION) # FIXME: if(PROJECT_IS_TOP_LEVEL)
@@ -27,10 +26,10 @@ endif()
 # ---- Create binary ----
 
 # XXX file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
-set(sources source/greeter.cpp)
+set(sources source/main.cpp source/greeter.cpp )
 
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest-main greeter::greeter)
+target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 # ---- Add tests for ctest ----
@@ -44,7 +43,7 @@ enable_testing()
 # For other testing frameworks add the tests target instead:
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
-# ---- TODO: code coverage the old way! ----
+# ---- code coverage (the old static way!) CK ----
 
 if(ENABLE_TEST_COVERAGE)
   target_compile_options(greeter PUBLIC -O0 -g -fprofile-arcs -ftest-coverage)
