@@ -33,7 +33,7 @@ add_executable(${PROJECT_NAME} ${sources})
 target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
 
 if(PROJECT_IS_TOP_LEVEL)
-  target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_${CMAKE_CXX_STANDARD})
+  # XXX target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_${CMAKE_CXX_STANDARD})
 else()
 
   # ---- TODO: code coverage the old way! ----
