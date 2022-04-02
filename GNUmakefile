@@ -43,13 +43,12 @@ install: test
 	cmake -B $(BUILD_DIR) -S $(CURDIR)/all -D USE_SANITIZER=""
 	DESTDIR=$(STAGE_DIR) cmake --install $(BUILD_DIR) --prefix $(INSTALL_PREFIX)
 
-check: $(BUILD_DIR)/all/compile_commands.json
-	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $<
-	run-clang-tidy -p $(<D) $(CURDIR)
-
-setup: $(BUILD_DIR)/all/compile_commands.json
-$(BUILD_DIR)/all/compile_commands.json:
-	cmake -B $(BUILD_DIR)/all -S $(CURDIR)/all $(CMAKE_SETUP) -D CMAKE_SKIP_INSTALL_RULES=YES
+check: $(BUILD_DIR)/compile_commands.json
+	# find $(BUILD_DIR) -name '*.h' | \
+	#   xargs perl -i -p -e 's/#include \/\*\*\/ "((ace|tao)[^"]+)"/#include <$$1>/;' \
+	#                    -e 's/#include "((ace|tao)[^"]+)"/#include <$$1>/;'
+	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $(BUILD_DIR)/compile_commands.json
+	run-clang-tidy -p $(BUILD_DIR) $(CURDIR)
 
 ################################
 
