@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.21...3.23)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
 # the same version
-#XXX set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
 
 # strongly encouraged to enable this globally to avoid conflicts between -Wpedantic being enabled
 # and -std=c++20 and -std=gnu++20 for example when compiling with PCH enabled
-#XXX set(CMAKE_CXX_EXTENSIONS NO)
+set(CMAKE_CXX_EXTENSIONS NO)
 
 # to be prepared for clang-tools usage!
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)

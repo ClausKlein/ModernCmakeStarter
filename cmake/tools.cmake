@@ -8,8 +8,8 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
-#XXX set(CMAKE_CXX_STANDARD 20)
-#XXX set(CMAKE_CXX_EXTENSIONS NO)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS NO)
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
 # enables sanitizers support using the the `USE_SANITIZER` flag available values are: Address,

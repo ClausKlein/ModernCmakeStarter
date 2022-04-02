@@ -32,22 +32,18 @@ set(sources source/greeter.cpp)
 
 add_executable(${PROJECT_NAME} ${sources})
 target_link_libraries(${PROJECT_NAME} doctest-main greeter::greeter)
-
-if(PROJECT_IS_TOP_LEVEL)
-  target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
-
-endif()
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 # ---- Add tests for ctest ----
 
 enable_testing()
 
 # Note: doctest and similar testing frameworks can automatically configure CMake tests.
-# For other # testing frameworks add the tests target instead:
-add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
-
 # XXX include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
 # XXX doctest_discover_tests(${PROJECT_NAME})
+
+# For other testing frameworks add the tests target instead:
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 # ---- TODO: code coverage the old way! ----
 
