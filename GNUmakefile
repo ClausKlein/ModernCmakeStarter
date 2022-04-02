@@ -22,7 +22,7 @@ export CTEST_OUTPUT_ON_FAILURE=YES
 PROJECT:=$(shell basename $(CURDIR))
 BUILD_DIR:=./build-${PROJECT}-${CMAKE_BUILD_TYPE}
 STAGE_DIR:=$(shell realpath $(CURDIR)/../stage)
-CMAKE_SETUP:=-D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -D CMAKE_STAGING_PREFIX=$(STAGE_DIR) #XXX -D USE_SANITIZER=Thread
+CMAKE_SETUP:=-D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -D CMAKE_STAGING_PREFIX=$(STAGE_DIR) #TODO -D CMAKE_CXX_STANDARD=20 #XXX -D USE_SANITIZER=Thread
 
 .PHONY: setup eclipse all test gcov install test_install clean distclean check format
 all: setup
@@ -47,7 +47,6 @@ $(BUILD_DIR)/compile_commands.json:
 	cmake -B $(BUILD_DIR) -S $(CURDIR)/all $(CMAKE_SETUP)
 
 ################################
->>>>>>> 2365824 (refactory cmake project concept)
 
 test_install: install distclean
 	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) #XXX -D TEST_INSTALLED_VERSION=1
