@@ -105,16 +105,15 @@ endif()
 # ---- Create an installable target ----
 # this allows users to install and find the library via `find_package()`.
 
-# Add other targets that you want installed here, be default we just package the one executable we
-# know we want to ship
-# cmake-format: off
+# Add other targets that you want installe here. Or be default we just package
+# all targets recursively found for the current folder if not specified.
 package_project(
+  NAME ${PROJECT_NAME}
   TARGETS ${PROJECT_NAME} project_options project_warnings
+  PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
   PUBLIC_DEPENDENCIES_CONFIGURED "fmt 8.1.1"
   # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
-  PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
 )
-# cmake-format: on
 
 # # the location where the project's version header will be placed should match the project's regular
 # # header paths

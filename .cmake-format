@@ -61,3 +61,23 @@ parse:
         EXPORT_HEADER: 1
         DISABLE_VERSION_SUFFIX: 1
         DEPENDENCIES: +
+    package_project:
+      pargs:
+        nargs: '*'
+        flags: []
+      spelling: package_project
+      kwargs:
+        NAME: 1
+        VERSION: 1
+        COMPATIBILITY: 1
+        CONFIG_EXPORT_DESTINATION: 1
+        CONFIG_INSTALL_DESTINATION: 1
+        TARGETS: +
+        INTERFACE_INCLUDES: +
+        PUBLIC_INCLUDES: +
+        INTERFACE_DEPENDENCIES_CONFIGURED: +
+        PUBLIC_DEPENDENCIES_CONFIGURED: +
+        INTERFACE_DEPENDENCIES: +
+        PUBLIC_DEPENDENCIES: +
+        PRIVATE_DEPENDENCIES_CONFIGURED: +
+        PRIVATE_DEPENDENCIES: +
