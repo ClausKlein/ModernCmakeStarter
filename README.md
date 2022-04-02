@@ -1,8 +1,9 @@
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/MacOS/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Windows/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Ubuntu/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Style/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Install/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions)
+[![MacOS](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/macos.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/macos.yml)
+[![Install](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/install.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/install.yml)
+[![Ubuntu](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/ubuntu.yml)
+[![Windows](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/windows.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/windows.yml)
+[![Standalone](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/standalone.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/standalone.yml)
+[![Style](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/style.yml/badge.svg)](https://github.com/ClausKlein/ModernCmakeStarter/actions/workflows/style.yml)
 
 <p align="center">
   <img src="https://repository-images.githubusercontent.com/254842585/4dfa7580-7ffb-11ea-99d0-46b8fe2f4170" height="175" width="auto" />
@@ -203,7 +204,8 @@ Perhaps the [MiniCppStarter](https://github.com/TheLartians/MiniCppStarter) is s
 
 ## Related projects and alternatives
 
+- [**cmake-init - The missing CMake project initializer**](https://github.com/friendlyanon/cmake-init#readme)
+- [**cpp-best-practices cpp_starter_project**](https://github.com/cpp-best-practices/cpp_starter_project#readme): A popular C++ starter project
 - [**ModernCppStarter & PVS-Studio Static Code Analyzer**](https://github.com/viva64/pvs-studio-cmake-examples/tree/master/modern-cpp-starter): Official instructions on how to use the ModernCppStarter with the PVS-Studio Static Code Analyzer.
-- [**lefticus/cpp_starter_project**](https://github.com/lefticus/cpp_starter_project/): A popular C++ starter project, created in 2017.
 - [**filipdutescu/modern-cpp-template**](https://github.com/filipdutescu/modern-cpp-template): A recent starter using a more traditional approach for CMake structure and dependency management.
 - [**vector-of-bool/pitchfork**](https://github.com/vector-of-bool/pitchfork/): Pitchfork is a Set of C++ Project Conventions.

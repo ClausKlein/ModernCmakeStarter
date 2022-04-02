@@ -26,7 +26,7 @@ endif()
 # ---- Create binary ----
 
 # XXX file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
-set(sources source/main.cpp source/greeter.cpp )
+set(sources source/main.cpp source/greeter.cpp)
 
 add_executable(${PROJECT_NAME} ${sources})
 target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
