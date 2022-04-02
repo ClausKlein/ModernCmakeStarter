@@ -13,13 +13,12 @@ include(../cmake/tools.cmake)
 
 # ---- Dependencies ----
 
-include(../cmake/CPM.cmake)
-
-CPMAddPackage("gh:onqtam/doctest@2.4.8")
+CPMAddPackage("gh:doctest/doctest@2.4.8")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 
 if(TEST_INSTALLED_VERSION)
-  find_package(Greeter REQUIRED)
+  find_package(Greeter 1.0 REQUIRED)
+  message(STATUS "Found ${Greeter_DIR}")
 else()
   CPMAddPackage(NAME Greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 endif()

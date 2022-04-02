@@ -1,7 +1,7 @@
 # The "bootstrap" part clones repositories (with hardwired paths). With the
 # help of the below setting, we can redirect these clones to our internal
 # Gitlab mirror.
-export GIT_CONFIG_PARAMETERS='url.git@code.rsint.net:mirror/github.com/.insteadOf=https://github.com/'
+#TODO export GIT_CONFIG_PARAMETERS='url.git@code.rsint.net:mirror/github.com/.insteadOf=https://github.com/'
 
 export CXX=g++
 export CC=gcc
@@ -31,7 +31,7 @@ test: all
 	cmake --build $(BUILD_DIR) --target $@
 
 install: test
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/test -D USE_SANITIZER=""
+	cmake -B $(BUILD_DIR) -S $(CURDIR)/all -D USE_SANITIZER=""
 	DESTDIR=$(STAGE_DIR) cmake --install $(BUILD_DIR) --prefix /
 
 check: $(BUILD_DIR)/compile_commands.json
@@ -43,7 +43,7 @@ check: $(BUILD_DIR)/compile_commands.json
 
 setup: $(BUILD_DIR)/compile_commands.json
 $(BUILD_DIR)/compile_commands.json:
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP)
+	cmake -B $(BUILD_DIR) -S $(CURDIR)/all $(CMAKE_SETUP)
 
 test_install: install distclean
 	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) -D TEST_INSTALLED_VERSION=1
