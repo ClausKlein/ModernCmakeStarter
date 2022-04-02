@@ -21,7 +21,7 @@ set(ENABLE_CLANG_TIDY_DEFAULT NO) # for user and developer builds
 # Note: update this to your new project's name and version
 project(
   greeter
-  VERSION 1.0
+  VERSION 1.1
   LANGUAGES CXX
 )
 
@@ -34,8 +34,8 @@ include(GNUInstallDirs)
 include(cmake/CPM.cmake)
 
 # see https://github.com/aminya/project_options for more info
-# XXX CPMAddPackage("gh:aminya/project_options@0.20.0")
-# XXX list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
+CPMAddPackage("gh:aminya/project_options@0.20.0")
+list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
 
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
@@ -49,16 +49,16 @@ CPMAddPackage(
 
 # ---- Setup default project_options ----
 
-# include(DynamicProjectOptions)
-# # Initialize project_options variable related to this project
-# # This overwrites `project_options` and sets `project_warnings`
-# # uncomment the options to enable them:
-# dynamic_project_options(
-#   # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
-#   # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
-#   # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
-# )
-# target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+include(DynamicProjectOptions)
+# Initialize project_options variable related to this project
+# This overwrites `project_options` and sets `project_warnings`
+# uncomment the options to enable them:
+dynamic_project_options(
+  # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
+  # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
+  # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
+)
+target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # ---- Add source files ----
 
@@ -85,10 +85,8 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd fo
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
 # FIXME: should be PRIVATE! CK
-# TODO: target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings)
-# TODO: target_link_libraries(${PROJECT_NAME} PUBLIC project_options)
+target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
 
-target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
 # target_include_directories with the SYSTEM modifier will request the compiler
 # to omit warnings from the provided paths, if the compiler supports that
 target_include_directories(
@@ -100,40 +98,35 @@ if(CMAKE_SKIP_INSTALL_RULES)
   return()
 endif()
 
-if(NOT PROJECT_IS_TOP_LEVEL)
-  return()
-endif()
-
 # ---- Create an installable target ----
 # this allows users to install and find the library via `find_package()`.
 
-# # Add other targets that you want installed here, be default we just package the one executable we
-# # know we want to ship
-# package_project(
-#   TARGETS
-#   ${PROJECT_NAME}
-#   PUBLIC_DEPENDENCIES_CONFIGURED
-#   "fmt 8.1.1"
-#   # XXX NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
-#   PUBLIC_INCLUDES
-#   ${PROJECT_SOURCE_DIR}/include
-# )
-
-# the location where the project's version header will be placed should match the project's regular
-# header paths
-string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
-
-packageProject(
-  NAME ${PROJECT_NAME}
-  VERSION ${PROJECT_VERSION}
-  NAMESPACE ${PROJECT_NAME}
-  BINARY_DIR ${PROJECT_BINARY_DIR}
-  INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
-  INCLUDE_DESTINATION include/${PROJECT_NAME}
-  VERSION_HEADER "${VERSION_HEADER_LOCATION}"
-  DISABLE_VERSION_SUFFIX YES
-  COMPATIBILITY SameMajorVersion
-  DEPENDENCIES "fmt 8.1.1"
+# Add other targets that you want installed here, be default we just package the one executable we
+# know we want to ship
+# cmake-format: off
+package_project(
+  TARGETS ${PROJECT_NAME} project_options project_warnings
+  PUBLIC_DEPENDENCIES_CONFIGURED "fmt 8.1.1"
+  # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
+  PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
 )
+# cmake-format: on
+
+# # the location where the project's version header will be placed should match the project's regular
+# # header paths
+# string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
+#
+# packageProject(
+#   NAME ${PROJECT_NAME}
+#   VERSION ${PROJECT_VERSION}
+#   NAMESPACE ${PROJECT_NAME}
+#   BINARY_DIR ${PROJECT_BINARY_DIR}
+#   INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
+#   INCLUDE_DESTINATION include/${PROJECT_NAME}
+#   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
+#   DISABLE_VERSION_SUFFIX YES
+#   COMPATIBILITY SameMajorVersion
+#   DEPENDENCIES "fmt 8.1.1"
+# )
 
 include(CPack)

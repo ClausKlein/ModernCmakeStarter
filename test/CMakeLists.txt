@@ -18,7 +18,7 @@ CPMAddPackage("gh:iboB/doctest-lib@2.4.8")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 
 if(TEST_INSTALLED_VERSION) # FIXME: if(PROJECT_IS_TOP_LEVEL)
-  find_package(greeter REQUIRED)
+  find_package(greeter 1.1 REQUIRED)
   message(STATUS "Found ${Greeter_DIR}")
 else()
   CPMAddPackage(NAME Greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
