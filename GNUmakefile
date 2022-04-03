@@ -23,7 +23,7 @@ export CMAKE_NO_VERBOSE=YES
 
 export CTEST_OUTPUT_ON_FAILURE=YES
 
-INSTALL_PREFIX:=/
+INSTALL_PREFIX:=/usr
 STAGE_DIR:=$(shell realpath $(CURDIR)/../stage)
 ####################################
 
@@ -40,7 +40,7 @@ test: all
 	gcovr $(BUILD_DIR)
 
 install: test
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/all -D USE_SANITIZER=""
+	cmake -B $(BUILD_DIR) -S $(CURDIR)/all -D OPT_ENABLE_COVERAGE=NO -DOPT_WARNINGS_AS_ERRORS=NO
 	DESTDIR=$(STAGE_DIR) cmake --install $(BUILD_DIR) --prefix $(INSTALL_PREFIX)
 
 check: $(BUILD_DIR)/compile_commands.json
