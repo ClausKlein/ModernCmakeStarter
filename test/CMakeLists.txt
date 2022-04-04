@@ -1,10 +1,14 @@
+#
+# This project enables the developer to build, test, install the project.
+# It is strongly recommended to test the exported cmake config package too!
+#
 cmake_minimum_required(VERSION 3.21...3.23)
 
 project(GreeterTests LANGUAGES CXX)
 
 # ---- Options ----
 
-option(ENABLE_TEST_COVERAGE "Enable test coverage" OFF)
+option(ENABLE_TEST_COVERAGE "Enable test coverage" OFF) # TODO(CK): deprecated!
 option(TEST_INSTALLED_VERSION "Test the version found by find_package" OFF)
 
 # --- Import tools ----
@@ -16,7 +20,7 @@ include(../cmake/tools.cmake)
 CPMAddPackage("gh:doctest/doctest@2.4.8")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 
-if(TEST_INSTALLED_VERSION) # FIXME: if(PROJECT_IS_TOP_LEVEL)
+if(TEST_INSTALLED_VERSION) # FIXME: or if(PROJECT_IS_TOP_LEVEL)
   find_package(greeter 1.1 REQUIRED)
   message(STATUS "Found ${Greeter_DIR}")
 else()

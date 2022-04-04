@@ -57,12 +57,15 @@ see [test/CMakePresets.json](test/CMakePresets.json)
 To cleanly separate the library and subproject code, the outer `CMakeList.txt` only defines the library itself while the tests and other subprojects are self-contained in their own directories.
 During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
 
-### Build and install with cmake default preset
+### Build and test with cmake preset
 
 ```bash
-cmake --preset=default
-cmake --build --preset=default --target all
-cmake --build --preset=default --target install
+cd test
+cmake --preset=test
+cmake --build --preset=test --target all
+ctest --preset=test
+cd ..
+gcovr -r .
 ```
 
 ### Build and run the standalone target

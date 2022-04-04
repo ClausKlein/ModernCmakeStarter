@@ -8,9 +8,9 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
+# NOTE: this should be the same as setting as in project_options()!
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS NO)
-set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
 # enables sanitizers support using the the `USE_SANITIZER` flag available values are: Address,
 # Memory, MemoryWithOrigins, Undefined, Thread, Leak, 'Address;Undefined'
