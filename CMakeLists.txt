@@ -1,3 +1,6 @@
+#
+# this project is for using as a sub project with add_subdirectory() or with CPMAddPackage()
+#
 cmake_minimum_required(VERSION 3.21...3.23)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
@@ -11,7 +14,7 @@ set(CMAKE_CXX_EXTENSIONS NO)
 # setup fix project configuration default options:
 set(ENABLE_PCH_DEFAULT NO) # for user and developer builds
 
-# strongly recomonded to NOT use this as precompile step!
+# It is strongly recomonded to NOT use this as precompile step!
 set(ENABLE_CPPCHECK_DEFAULT NO) # for user and developer builds
 # run_clang-tdiy -p build-dir ...
 set(ENABLE_CLANG_TIDY_DEFAULT NO) # for user and developer builds
@@ -77,10 +80,10 @@ set(sources include/greeter/greeter.h)
 # target: add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME} ${headers} ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd for package user
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)

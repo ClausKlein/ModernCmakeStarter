@@ -1,16 +1,16 @@
 # this file contains a list of tools that can be activated and downloaded on-demand each tool is
 # enabled during configuration by passing an additional `-DUSE_<TOOL>=<VALUE>` argument to CMake
 
-# only activate tools for top level project
+# only activate tools for top level project()
 if(NOT PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   return()
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
+# NOTE: this should be the same as setting as in project_options()!
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS NO)
-set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
 # enables sanitizers support using the the `USE_SANITIZER` flag available values are: Address,
 # Memory, MemoryWithOrigins, Undefined, Thread, Leak, 'Address;Undefined'
