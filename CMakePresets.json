@@ -1,0 +1,64 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default Config",
+      "description": "Default build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/default",
+      "installDir": "${sourceDir}/stage",
+      "cacheVariables": {
+        "INSTALL_PREFIX": {
+          "type": "STRING",
+          "value": "/usr"
+        },
+        "CMAKE_C_STANDARD": "17",
+        "ENABLE_DEVELOPER_MODE": "NO",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "NO",
+        "CPM_SOURCE_CACHE": "$env{HOME}/.cache/CPM"
+      },
+      "environment": {
+        "CTEST_OUTPUT_ON_FAILURE": "YES",
+        "PATH": "$env{HOME}/.local/usr/bin:$penv{PATH}"
+      }
+    },
+    {
+      "name": "ninja-multi",
+      "inherits": "default",
+      "displayName": "Ninja Multi-Config",
+      "description": "Default build using Ninja Multi-Config generator",
+      "generator": "Ninja Multi-Config"
+    },
+    {
+      "name": "windows-only",
+      "inherits": "default",
+      "displayName": "Windows-only configuration",
+      "description": "This build is only available on Windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "output": {"outputOnFailure": true},
+      "execution": {"noTestsAction": "error", "stopOnFailure": true}
+    }
+  ]
+}

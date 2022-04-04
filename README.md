@@ -26,10 +26,9 @@ This template is the result of learnings from many previous projects and should 
 - Code formatting enforced by [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [cmake-format](https://github.com/cheshirekow/cmake_format) via [Format.cmake](https://github.com/TheLartians/Format.cmake)
 - Reproducible dependency management via [CPM.cmake](https://github.com/TheLartians/CPM.cmake)
 - Installable target with automatic versioning information and header generation via [PackageProject.cmake](https://github.com/TheLartians/PackageProject.cmake)
-- Automatic [documentation](https://thelartians.github.io/ModernCppStarter) and deployment with [Doxygen](https://www.doxygen.nl) and [GitHub Pages](https://pages.github.com)
 - Configurable support for [sanitizer tools, and more](#additional-tools)
 
-## New Features added
+### New Features added
 
 Alternatively you may use the [flexible project options](https://github.com/aminya/project_options#readme). It provides different cmake functions such:
 
@@ -39,6 +38,9 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 - `run_vcpkg()`
 - `target_link_system_libraries()`
 - and [conan](https://docs.conan.io/en/latest/) for dependency management.
+- [CMake presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html)
+- [Build a project with presets](https://cmake.org/cmake/help/latest/manual/cmake.1.html#build-a-project)
+
 
 ## Usage
 
@@ -54,6 +56,14 @@ see [test/CMakePresets.json](test/CMakePresets.json)
 
 To cleanly separate the library and subproject code, the outer `CMakeList.txt` only defines the library itself while the tests and other subprojects are self-contained in their own directories.
 During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
+
+### Build and install with cmake default preset
+
+```bash
+cmake --preset=default
+cmake --build --preset=default --target all
+cmake --build --preset=default --target install
+```
 
 ### Build and run the standalone target
 
@@ -104,8 +114,6 @@ cmake --build build/test --target fix-format
 See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
 
 ### Build the documentation
-
-see [documentation/CMakeLists.txt](documentation/CMakeLists.txt)
 
 To manually build documentation, call the following command.
 
