@@ -8,9 +8,6 @@ set(CMAKE_CXX_STANDARD 20)
 # and -std=c++20 and -std=gnu++20 for example when compiling with PCH enabled
 set(CMAKE_CXX_EXTENSIONS NO)
 
-# to be prepared for clang-tools usage!
-set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
-
 # setup fix project configuration default options:
 set(ENABLE_PCH_DEFAULT NO) # for user and developer builds
 

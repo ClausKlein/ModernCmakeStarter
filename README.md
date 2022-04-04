@@ -9,14 +9,15 @@
   <img src="https://repository-images.githubusercontent.com/254842585/4dfa7580-7ffb-11ea-99d0-46b8fe2f4170" height="175" width="auto" />
 </p>
 
-# ModernCppStarter
+# ModernCmakeStarter
 
 Setting up a new C++ project usually requires a significant amount of preparation and boilerplate code, even more so for modern C++ projects with tests, executables and continuous integration.
 This template is the result of learnings from many previous projects and should help reduce the work required to setup up a modern C++ project.
 
 ## Features
 
-- [Modern CMake practices](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/)
+- [How to Use CMake Without the Agonizing Pain](https://alexreinking.com/blog/how-to-use-cmake-without-the-agonizing-pain-part-1.html) Note the Resources sections!
+- [Modern CMake practices](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/) Noteable if you want to use project without CMake config package exports
 - Suited for single header libraries and projects of any scale
 - Clean separation of library and executable code
 - Integrated test suite
@@ -25,10 +26,9 @@ This template is the result of learnings from many previous projects and should 
 - Code formatting enforced by [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [cmake-format](https://github.com/cheshirekow/cmake_format) via [Format.cmake](https://github.com/TheLartians/Format.cmake)
 - Reproducible dependency management via [CPM.cmake](https://github.com/TheLartians/CPM.cmake)
 - Installable target with automatic versioning information and header generation via [PackageProject.cmake](https://github.com/TheLartians/PackageProject.cmake)
-- Automatic [documentation](https://thelartians.github.io/ModernCppStarter) and deployment with [Doxygen](https://www.doxygen.nl) and [GitHub Pages](https://pages.github.com)
 - Configurable support for [sanitizer tools, and more](#additional-tools)
 
-## New Features added
+### New Features added
 
 Alternatively you may use the [flexible project options](https://github.com/aminya/project_options#readme). It provides different cmake functions such:
 
@@ -38,6 +38,9 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 - `run_vcpkg()`
 - `target_link_system_libraries()`
 - and [conan](https://docs.conan.io/en/latest/) for dependency management.
+- [CMake presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html)
+- [Build a project with presets](https://cmake.org/cmake/help/latest/manual/cmake.1.html#build-a-project)
+
 
 ## Usage
 
@@ -57,6 +60,14 @@ Feel free to replace the License with one suited for your project.
 
 To cleanly separate the library and subproject code, the outer `CMakeList.txt` only defines the library itself while the tests and other subprojects are self-contained in their own directories.
 During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
+
+### Build and install with cmake default preset
+
+```bash
+cmake --preset=default
+cmake --build --preset=default --target all
+cmake --build --preset=default --target install
+```
 
 ### Build and run the standalone target
 
@@ -102,7 +113,6 @@ See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
 
 ### Build the documentation
 
-The documentation is automatically built and [published](https://thelartians.github.io/ModernCppStarter) whenever a [GitHub Release](https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository) is created.
 To manually build documentation, call the following command.
 
 ```bash
