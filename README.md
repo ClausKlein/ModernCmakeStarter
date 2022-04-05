@@ -52,7 +52,7 @@ convenient to [build all subprojects at once](#build-everything-at-once).
 
 ### Build and test with cmake preset
 
-see [test/CMakePreset.txt](test/CMakePreset.txt)
+see [test/CMakePresets.json](test/CMakePresets.json)
 
 ```bash
 cd test
