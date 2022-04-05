@@ -44,35 +44,28 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 
 ## Usage
 
-### Adjust the template to your needs
+### Important note
 
-- Use this repo [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template).
-- Replace all occurrences of "Greeter" in the relevant CMakeLists.txt with the name of your project
-  - Capitalization matters here: `Greeter` means the name of the project, while `greeter` is used in file names.
-  - Remember to rename the `include/greeter` directory to use your project's lowercase name and update all relevant `#include`s accordingly.
-- Replace the source files with your own
-- For header-only libraries: see the comments in [CMakeLists.txt](CMakeLists.txt)
-- Add [your project's codecov token](https://docs.codecov.io/docs/quick-start) to your project's github secrets under `CODECOV_TOKEN`
-- Happy coding!
-
-Eventually, you can remove any unused files, such as the standalone directory or irrelevant github workflows for your project.
-Feel free to replace the License with one suited for your project.
-
-To cleanly separate the library and subproject code, the outer `CMakeList.txt` only defines the library itself while the tests and other subprojects are self-contained in their own directories.
-During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
+To cleanly separate the library and subproject code, the outer [CMakeLists.txt](CMakeLists.txt) only defines the library
+itself while the tests and other subprojects are self-contained in their own directories.  During development it is usually
+convenient to [build all subprojects at once](#build-everything-at-once).
 
 ### Build and test with cmake preset
 
+see [test/CMakePreset.txt](test/CMakePreset.txt)
+
 ```bash
 cd test
-cmake --preset=test
-cmake --build --preset=test --target all
-ctest --preset=test
-cd ..
-gcovr -r .
+cmake --preset=ninja-multi
+cmake --build --preset=ninja-multi --config Release
+cmake --build --preset=ninja-multi --config Release --target help
+ctest --preset=ninja-multi   --build-config Release
+gcovr -r ..
 ```
 
 ### Build and run the standalone target
+
+see [standalone/CMakeLists.txt](standalone/CMakeLists.txt)
 
 Use the following command to build and run the executable target.
 
@@ -83,6 +76,8 @@ cmake --build build/standalone
 ```
 
 ### Build and run test suite
+
+see [test/CMakeLists.txt](test/CMakeLists.txt)
 
 Use the following commands from the project's root directory to run the test suite.
 
@@ -96,6 +91,8 @@ CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
 ```
 
 To collect code coverage information, run CMake with the `-DENABLE_TEST_COVERAGE=1` option.
+
+It is simpler if you [build and test with cmake preset](#build-and-test-with-cmake-preset)
 
 ### Run clang-format
 
@@ -116,6 +113,8 @@ See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
 
 ### Build the documentation
 
+see [documentation/CMakeLists.txt](documentation/CMakeLists.txt)
+
 To manually build documentation, call the following command.
 
 ```bash
@@ -125,9 +124,11 @@ cmake --build build/doc --target GenerateDocs
 open build/doc/doxygen/html/index.html
 ```
 
-To build the documentation locally, you will need Doxygen, jinja2 and Pygments on installed your system.
+To build the documentation locally, you will need Doxygen, jinja2 and Pygments installed on your system.
 
 ### Build everything at once
+
+see [all/CMakeLists.txt](all/CMakeLists.txt)
 
 The project also includes an `all` directory that allows building all targets at the same time.
 This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.
@@ -163,7 +164,7 @@ Additional arguments can be passed to the analyzers by setting the `CLANG_TIDY_A
 
 #### Ccache
 
-Ccache can be enabled by configuring with `-DUSE_CCACHE=<ON | OFF>`.
+Ccache is enabled as long it is found.
 
 ## FAQ
 

@@ -11,7 +11,7 @@
       "displayName": "Test Config",
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/../build/test",
+      "binaryDir": "${sourceParentDir}/build/${presetName}",
       "installDir": "$env{HOME}/.local/",
       "cacheVariables": {
         "CMAKE_INSTALL_PREFIX": "/usr",
@@ -54,6 +54,10 @@
     {
       "name": "test",
       "configurePreset": "test"
+    },
+    {
+      "name": "ninja-multi",
+      "configurePreset": "ninja-multi"
     }
   ],
   "testPresets": [
@@ -62,6 +66,11 @@
       "configurePreset": "test",
       "output": {"outputOnFailure": true},
       "execution": {"noTestsAction": "error", "stopOnFailure": true}
+    },
+    {
+      "name": "ninja-multi",
+      "configurePreset": "ninja-multi",
+      "inherits": "test"
     }
   ]
 }
