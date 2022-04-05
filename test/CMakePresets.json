@@ -1,0 +1,76 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "test",
+      "displayName": "Test Config",
+      "description": "Default build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceParentDir}/build/${presetName}",
+      "installDir": "$env{HOME}/.local/",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "/usr",
+        "CMAKE_STAGING_PREFIX": {
+          "type": "PATH",
+          "value": "$env{HOME}/.local/usr"
+        },
+        "CMAKE_C_STANDARD": "17",
+        "CMAKE_CXX_STANDARD": "17",
+        "OPT_ENABLE_COVERAGE": "ON",
+        "ENABLE_DEVELOPER_MODE": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "NO",
+        "CPM_SOURCE_CACHE": "$env{HOME}/.cache/CPM"
+      },
+      "environment": {
+        "CTEST_OUTPUT_ON_FAILURE": "YES",
+        "PATH": "$env{HOME}/.local/usr/bin:$penv{PATH}"
+      }
+    },
+    {
+      "name": "ninja-multi",
+      "inherits": "test",
+      "displayName": "Ninja Multi-Config",
+      "description": "Default build using Ninja Multi-Config generator",
+      "generator": "Ninja Multi-Config"
+    },
+    {
+      "name": "windows-only",
+      "inherits": "test",
+      "displayName": "Windows-only configuration",
+      "description": "This build is only available on Windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "test",
+      "configurePreset": "test"
+    },
+    {
+      "name": "ninja-multi",
+      "configurePreset": "ninja-multi"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test",
+      "configurePreset": "test",
+      "output": {"outputOnFailure": true},
+      "execution": {"noTestsAction": "error", "stopOnFailure": true}
+    },
+    {
+      "name": "ninja-multi",
+      "configurePreset": "ninja-multi",
+      "inherits": "test"
+    }
+  ]
+}

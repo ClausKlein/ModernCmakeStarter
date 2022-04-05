@@ -1,5 +1,5 @@
 #include <greeter/greeter.h>
-#include <greeter/version.h>
+// XXX #include <greeter/version.h>
 
 #include <cxxopts.hpp>
 #include <iostream>
@@ -22,7 +22,7 @@ auto main(int argc, char** argv) -> int {
   // clang-format off
   options.add_options()
     ("h,help", "Show help")
-    ("v,version", "Print the current version number")
+    // ("v,version", "Print the current version number")
     ("n,name", "Name to greet", cxxopts::value(name)->default_value("World"))
     ("l,lang", "Language code to use", cxxopts::value(language)->default_value("en"))
   ;
@@ -35,10 +35,10 @@ auto main(int argc, char** argv) -> int {
     return 0;
   }
 
-  if (result["version"].as<bool>()) {
-    std::cout << "Greeter, version " << GREETER_VERSION << std::endl;
-    return 0;
-  }
+  // if (result["version"].as<bool>()) {
+  //   std::cout << "Greeter, version " << GREETER_VERSION << std::endl;
+  //   return 0;
+  // }
 
   auto langIt = languages.find(language);
   if (langIt == languages.end()) {

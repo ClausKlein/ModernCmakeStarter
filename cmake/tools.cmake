@@ -1,17 +1,21 @@
 # this file contains a list of tools that can be activated and downloaded on-demand each tool is
 # enabled during configuration by passing an additional `-DUSE_<TOOL>=<VALUE>` argument to CMake
 
-# only activate tools for top level project
+# only activate tools for top level project()
 if(NOT PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   return()
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
+# NOTE: this should be the same as setting as in project_options()!
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS NO)
+
 # enables sanitizers support using the the `USE_SANITIZER` flag available values are: Address,
 # Memory, MemoryWithOrigins, Undefined, Thread, Leak, 'Address;Undefined'
 set(USE_SANITIZER
-    "Address;Undefined"
+    ""
     CACHE STRING "one or more of: Address, Memory, MemoryWithOrigins, Undefined, Thread, Leak"
 )
 if(USE_SANITIZER OR USE_STATIC_ANALYZER)
@@ -69,7 +73,7 @@ if(USE_SANITIZER OR USE_STATIC_ANALYZER)
 endif()
 
 # enables CCACHE support through the USE_CCACHE flag possible values are: YES, NO or equivalent
-option(USE_CCACHE "enables ccache support" YES)
+option(USE_CCACHE "enables ccache support" NO)
 if(USE_CCACHE)
   CPMAddPackage("gh:TheLartians/Ccache.cmake@1.2.3")
 endif()
