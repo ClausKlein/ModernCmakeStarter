@@ -52,20 +52,15 @@ convenient to [build all subprojects at once](#build-everything-at-once).
 
 ### Build and test with cmake preset
 
-see [test/CMakePresets.json](test/CMakePresets.json)
-
-To cleanly separate the library and subproject code, the outer `CMakeList.txt` only defines the library itself while the tests and other subprojects are self-contained in their own directories.
-During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
-
-### Build and test with cmake preset
+see [test/CMakePreset.txt](test/CMakePreset.txt)
 
 ```bash
 cd test
-cmake --preset=test
-cmake --build --preset=test --target all
-ctest --preset=test
-cd ..
-gcovr -r .
+cmake --preset=ninja-multi
+cmake --build --preset=ninja-multi --config Release
+cmake --build --preset=ninja-multi --config Release --target help
+ctest --preset=ninja-multi   --build-config Release
+gcovr -r ..
 ```
 
 ### Build and run the standalone target
@@ -117,6 +112,8 @@ cmake --build build/test --target fix-format
 See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
 
 ### Build the documentation
+
+see [documentation/CMakeLists.txt](documentation/CMakeLists.txt)
 
 To manually build documentation, call the following command.
 
