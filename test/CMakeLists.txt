@@ -25,6 +25,7 @@ if(TEST_INSTALLED_VERSION) # FIXME: or if(PROJECT_IS_TOP_LEVEL)
   message(STATUS "Found ${Greeter_DIR}")
 else()
   CPMAddPackage(NAME Greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+  target_disable_clang_tidy(doctest)
 endif()
 
 # ---- Create binary ----
@@ -35,7 +36,6 @@ set(sources source/main.cpp source/greeter.cpp)
 add_executable(${PROJECT_NAME} ${sources})
 target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
-target_disable_clang_tidy(doctest)
 
 # ---- Add tests for ctest ----
 
