@@ -2,7 +2,7 @@
 # This project enables the developer to build, test, install the project.
 # It is strongly recommended to test the exported cmake config package too!
 #
-cmake_minimum_required(VERSION 3.21...3.23)
+cmake_minimum_required(VERSION 3.21...3.24)
 
 project(GreeterTests LANGUAGES CXX)
 
@@ -35,6 +35,7 @@ set(sources source/main.cpp source/greeter.cpp)
 add_executable(${PROJECT_NAME} ${sources})
 target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+target_disable_clang_tidy(doctest)
 
 # ---- Add tests for ctest ----
 

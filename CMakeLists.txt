@@ -1,7 +1,7 @@
 #
 # this project is for using as a sub project with add_subdirectory() or with CPMAddPackage()
 #
-cmake_minimum_required(VERSION 3.21...3.23)
+cmake_minimum_required(VERSION 3.21...3.24)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
 # the same version
@@ -37,7 +37,7 @@ include(GNUInstallDirs)
 include(cmake/CPM.cmake)
 
 # see https://github.com/aminya/project_options for more info
-CPMAddPackage("gh:aminya/project_options@0.20.0")
+CPMAddPackage("gh:aminya/project_options@0.24.1")
 list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
 
 # PackageProject.cmake will be used to make our target installable
@@ -65,6 +65,7 @@ dynamic_project_options(
 # cmake-format: on
 target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
+
 # ---- Add source files ----
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
@@ -87,9 +88,8 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd fo
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
+target_disable_clang_tidy(fmt)
 
-# FIXME: should be PRIVATE! CK
-target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
 
 # target_include_directories with the SYSTEM modifier will request the compiler
 # to omit warnings from the provided paths, if the compiler supports that
@@ -99,6 +99,8 @@ target_include_directories(
 )
 
 if(CMAKE_SKIP_INSTALL_RULES)
+  # FIXME: should be PRIVATE! CK
+  target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
   return()
 endif()
 
@@ -109,7 +111,7 @@ endif()
 # all targets recursively found for the current folder if not specified.
 package_project(
   NAME ${PROJECT_NAME}
-  TARGETS ${PROJECT_NAME} project_options project_warnings
+  TARGETS ${PROJECT_NAME} # XXX project_options project_warnings
   PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
   PUBLIC_DEPENDENCIES_CONFIGURED "fmt 8.1.1"
   # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
