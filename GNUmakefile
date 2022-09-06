@@ -33,41 +33,38 @@ CMAKE_SETUP:=-D CMAKE_STAGING_PREFIX=$(STAGE_DIR)/$(INSTALL_PREFIX) -D CMAKE_INS
 
 .PHONY: setup eclipse all test gcov install test_install clean distclean check format
 all: setup
-	cmake --build $(BUILD_DIR) --target $@
+	cmake --build $(BUILD_DIR)/all --target $@
 
 test: all
-	cmake --build $(BUILD_DIR) --target $@
-	gcovr $(BUILD_DIR)
+	cmake --build $(BUILD_DIR)/all --target $@
 
-install: test
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/all -D OPT_ENABLE_COVERAGE=NO -DOPT_WARNINGS_AS_ERRORS=NO
+install: # test
+	cmake -B $(BUILD_DIR) -S $(CURDIR) $(CMAKE_SETUP) -D OPT_ENABLE_COVERAGE=NO -DOPT_WARNINGS_AS_ERRORS=NO
+	cmake --build $(BUILD_DIR)
 	DESTDIR=$(STAGE_DIR) cmake --install $(BUILD_DIR) --prefix $(INSTALL_PREFIX)
 
-check: $(BUILD_DIR)/compile_commands.json
-	# find $(BUILD_DIR) -name '*.h' | \
-	#   xargs perl -i -p -e 's/#include \/\*\*\/ "((ace|tao)[^"]+)"/#include <$$1>/;' \
-	#                    -e 's/#include "((ace|tao)[^"]+)"/#include <$$1>/;'
-	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $(BUILD_DIR)/compile_commands.json
-	run-clang-tidy -p $(BUILD_DIR) $(CURDIR)
+check: $(BUILD_DIR)/all/compile_commands.json
+	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $<
+	run-clang-tidy -p $(<D) $(CURDIR)
 
-setup: $(BUILD_DIR)/compile_commands.json
-$(BUILD_DIR)/compile_commands.json:
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/all $(CMAKE_SETUP)
+setup: $(BUILD_DIR)/all/compile_commands.json
+$(BUILD_DIR)/all/compile_commands.json:
+	cmake -B $(BUILD_DIR)/all -S $(CURDIR)/all $(CMAKE_SETUP) -D CMAKE_SKIP_INSTALL_RULES=YES
 
 ################################
 
 test_install: install distclean
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) -D TEST_INSTALLED_VERSION=1
+	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) -D TEST_INSTALLED_VERSION=YES
 	cmake --build $(BUILD_DIR) --target all
 	cmake --build $(BUILD_DIR) --target test
 
 ################################
 
 gcov: distclean
-	cmake -B $(BUILD_DIR) -S $(CURDIR)/test $(CMAKE_SETUP) -D ENABLE_TEST_COVERAGE=1
-	cmake --build $(BUILD_DIR) --target all
-	cmake --build $(BUILD_DIR) --target test
-	gcovr $(BUILD_DIR)
+	cmake -B $(BUILD_DIR)/all -S $(CURDIR)/all $(CMAKE_SETUP) -D OPT_ENABLE_COVERAGE=YES
+	cmake --build $(BUILD_DIR)/all --target all
+	cmake --build $(BUILD_DIR)/all --target test
+	gcovr $(BUILD_DIR)/all
 
 clean:
 	-cmake --build $(BUILD_DIR) --target $@

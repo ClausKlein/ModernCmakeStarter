@@ -1,7 +1,7 @@
 # this script adds all subprojects to a single build to allow IDEs understand the full project
 # structure.
 
-cmake_minimum_required(VERSION 3.21...3.23)
+cmake_minimum_required(VERSION 3.21...3.24)
 
 project(BuildAll LANGUAGES CXX)
 
@@ -16,7 +16,7 @@ set(ENABLE_DEVELOPER_MODE
 set(WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT ON)
 set(ENABLE_COVERAGE_DEVELOPER_DEFAULT ON)
 
-include(../cmake/tools.cmake)
+# XXX include(../cmake/tools.cmake)
 
 # needed to generate test target
 enable_testing()

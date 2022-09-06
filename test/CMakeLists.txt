@@ -8,12 +8,11 @@ project(GreeterTests LANGUAGES CXX)
 
 # ---- Options ----
 
-option(ENABLE_TEST_COVERAGE "Enable test coverage" OFF) # TODO(CK): deprecated!
 option(TEST_INSTALLED_VERSION "Test the version found by find_package" OFF)
 
 # --- Import tools ----
 
-include(../cmake/tools.cmake)
+include(../cmake/CPM.cmake)
 
 # ---- Dependencies ----
 
@@ -49,8 +48,3 @@ enable_testing()
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 # ---- code coverage (the old static way!) CK ----
-
-if(ENABLE_TEST_COVERAGE)
-  target_compile_options(greeter PUBLIC -O0 -g -fprofile-arcs -ftest-coverage)
-  target_link_options(greeter PUBLIC -fprofile-arcs -ftest-coverage)
-endif()

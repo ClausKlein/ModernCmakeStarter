@@ -37,7 +37,7 @@ include(GNUInstallDirs)
 include(cmake/CPM.cmake)
 
 # see https://github.com/aminya/project_options for more info
-CPMAddPackage("gh:aminya/project_options@0.24.1")
+CPMAddPackage("gh:aminya/project_options@0.25.0")
 list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
 
 # PackageProject.cmake will be used to make our target installable
@@ -65,7 +65,6 @@ dynamic_project_options(
 # cmake-format: on
 target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
-
 # ---- Add source files ----
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
@@ -89,7 +88,6 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd fo
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 target_disable_clang_tidy(fmt)
-
 
 # target_include_directories with the SYSTEM modifier will request the compiler
 # to omit warnings from the provided paths, if the compiler supports that
