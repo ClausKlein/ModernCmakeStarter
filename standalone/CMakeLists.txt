@@ -18,10 +18,10 @@ CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 
 # ---- Create standalone executable ----
 
-# XXX file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
-set(sources source/main.cpp)
+# XXX file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+set(_sources source/main.cpp)
 
-add_executable(${PROJECT_NAME} ${sources})
+add_executable(${PROJECT_NAME} ${_sources})
 
 target_link_libraries(${PROJECT_NAME} greeter::greeter cxxopts)
 target_disable_clang_tidy(cxxopts)

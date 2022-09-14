@@ -37,8 +37,9 @@ include(GNUInstallDirs)
 include(cmake/CPM.cmake)
 
 # see https://github.com/aminya/project_options for more info
-CPMAddPackage("gh:aminya/project_options@0.25.0")
+CPMAddPackage("gh:aminya/project_options@0.25.1")
 list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
+#XXX list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR})
 
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
@@ -58,31 +59,32 @@ include(DynamicProjectOptions)
 # uncomment the options to enable them:
 # cmake-format: off
 dynamic_project_options(
+  PREFIX ${PROJECT_NAME}
   # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
   # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
   # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
 )
 # cmake-format: on
-target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # ---- Add source files ----
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
-# XXX file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
-# XXX file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
-set(headers source/greeter.cpp)
-set(sources include/greeter/greeter.h)
+# XXX file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+# XXX file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+set(_headers source/greeter.cpp)
+set(_sources include/greeter/greeter.h)
 
 # ---- Create library ----
 
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
 # target: add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME} ${headers} ${sources})
+add_library(${PROJECT_NAME} ${_headers} ${_sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # being a cross-platform target, we enforce standards conformance on MSVC
-target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
+target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd for package user
 
 # Link dependencies
@@ -98,7 +100,9 @@ target_include_directories(
 
 if(CMAKE_SKIP_INSTALL_RULES)
   # FIXME: should be PRIVATE! CK
-  target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
+  target_link_libraries(
+    ${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_project_warnings ${PROJECT_NAME}_project_options
+  )
   return()
 endif()
 
@@ -115,10 +119,10 @@ package_project(
   # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
 )
 
-# # the location where the project's version header will be placed should match the project's regular
-# # header paths
+# the location where the project's version header will be placed should match the project's regular
+# header paths
 # string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
-#
+
 # packageProject(
 #   NAME ${PROJECT_NAME}
 #   VERSION ${PROJECT_VERSION}

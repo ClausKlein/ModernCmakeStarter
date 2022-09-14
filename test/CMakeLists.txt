@@ -29,10 +29,10 @@ endif()
 
 # ---- Create binary ----
 
-# XXX file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
-set(sources source/main.cpp source/greeter.cpp)
+# XXX file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+set(_sources source/main.cpp source/greeter.cpp)
 
-add_executable(${PROJECT_NAME} ${sources})
+add_executable(${PROJECT_NAME} ${_sources})
 target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
@@ -47,4 +47,3 @@ enable_testing()
 # For other testing frameworks add the tests target instead:
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
-# ---- code coverage (the old static way!) CK ----
