@@ -26,7 +26,9 @@ This template is the result of learnings from many previous projects and should 
 - Code formatting enforced by [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [cmake-format](https://github.com/cheshirekow/cmake_format) via [Format.cmake](https://github.com/TheLartians/Format.cmake)
 - Reproducible dependency management via [CPM.cmake](https://github.com/TheLartians/CPM.cmake)
 - Installable target with automatic versioning information and header generation via [PackageProject.cmake](https://github.com/TheLartians/PackageProject.cmake)
+- Automatic [documentation](https://thelartians.github.io/ModernCppStarter) and deployment with [Doxygen](https://www.doxygen.nl) and [GitHub Pages](https://pages.github.com)
 - Configurable support for [sanitizer tools, and more](#additional-tools)
+
 
 ### New Features added
 
@@ -41,6 +43,7 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 - [CMake presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html)
 - [Build a project with presets](https://cmake.org/cmake/help/latest/manual/cmake.1.html#build-a-project)
 
+- Supports [CMake Workflow Presets](https://cmake.org/cmake/help/v3.25/manual/cmake-presets.7.html#id10)
 
 ## Usage
 
@@ -70,6 +73,8 @@ see [standalone/CMakeLists.txt](standalone/CMakeLists.txt)
 Use the following command to build and run the executable target.
 
 ```bash
+cd standalone && cmake --workflow --preset=default
+# or
 cmake -S standalone -B build/standalone
 cmake --build build/standalone
 ./build/standalone/Greeter --help
@@ -82,6 +87,8 @@ see [test/CMakeLists.txt](test/CMakeLists.txt)
 Use the following commands from the project's root directory to run the test suite.
 
 ```bash
+cd test && cmake --workflow --preset=default
+# or
 cmake -S test -B build/test
 cmake --build build/test
 CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
@@ -110,6 +117,11 @@ cmake --build build/test --target fix-format
 ```
 
 See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
+These dependencies can be easily installed using pip.
+
+```bash
+pip install clang-format==14.0.6 cmake_format==0.6.11 pyyaml
+```
 
 ### Build the documentation
 
@@ -134,6 +146,8 @@ The project also includes an `all` directory that allows building all targets at
 This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.
 
 ```bash
+cd all && cmake --workflow --preset=default
+# or
 cmake -S all -B build
 cmake --build build
 

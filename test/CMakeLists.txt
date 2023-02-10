@@ -2,13 +2,12 @@
 # This project enables the developer to build, test, install the project.
 # It is strongly recommended to test the exported cmake config package too!
 #
-cmake_minimum_required(VERSION 3.21...3.23)
+cmake_minimum_required(VERSION 3.21...3.25)
 
 project(GreeterTests LANGUAGES CXX)
 
 # ---- Options ----
 
-option(ENABLE_TEST_COVERAGE "Enable test coverage" OFF) # TODO(CK): deprecated!
 option(TEST_INSTALLED_VERSION "Test the version found by find_package" OFF)
 
 # --- Import tools ----
@@ -17,7 +16,9 @@ include(../cmake/tools.cmake)
 
 # ---- Dependencies ----
 
-CPMAddPackage("gh:doctest/doctest@2.4.8")
+include(../cmake/CPM.cmake)
+
+CPMAddPackage("gh:doctest/doctest@2.4.9")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 
 if(TEST_INSTALLED_VERSION) # FIXME: or if(PROJECT_IS_TOP_LEVEL)
@@ -41,16 +42,6 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 enable_testing()
 
-# Note: doctest and similar testing frameworks can automatically configure CMake tests.
-# XXX include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
-# XXX doctest_discover_tests(${PROJECT_NAME})
 
 # For other testing frameworks add the tests target instead:
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
-
-# ---- code coverage (the old static way!) CK ----
-
-if(ENABLE_TEST_COVERAGE)
-  target_compile_options(greeter PUBLIC -O0 -g -fprofile-arcs -ftest-coverage)
-  target_link_options(greeter PUBLIC -fprofile-arcs -ftest-coverage)
-endif()

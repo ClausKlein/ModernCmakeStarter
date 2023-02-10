@@ -1,0 +1,7 @@
+./CMakeLists.txt
+./all/CMakeLists.txt
+./cmake/CPM.cmake
+./cmake/tools.cmake
+./documentation/CMakeLists.txt
+./standalone/CMakeLists.txt
+./test/CMakeLists.txt

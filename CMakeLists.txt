@@ -1,7 +1,7 @@
 #
 # this project is for using as a sub project with add_subdirectory() or with CPMAddPackage()
 #
-cmake_minimum_required(VERSION 3.21...3.23)
+cmake_minimum_required(VERSION 3.21...3.25)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
 # the same version
@@ -31,22 +31,28 @@ project(
 # to get CMAKE_INSTALL_INCLUDEDIR
 include(GNUInstallDirs)
 
+if(NOT PROJECT_IS_TOP_LEVEL)
+  option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" YES)
+endif()
+
+option(OPTION_ENABLE_UNITY "Enable Unity builds of project" ON)
+
 # ---- Add dependencies via CPM ----
 # see https://github.com/TheLartians/CPM.cmake for more info
 
 include(cmake/CPM.cmake)
 
 # see https://github.com/aminya/project_options for more info
-CPMAddPackage("gh:aminya/project_options@0.20.0")
-list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
+CPMAddPackage("gh:aminya/project_options@0.26.3")
+list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)
 
 # PackageProject.cmake will be used to make our target installable
-CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
+CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
 CPMAddPackage(
   NAME fmt
-  GIT_TAG 8.1.1
-  GITHUB_REPOSITORY fmtlib/fmt
+  GIT_TAG 9.1.0
+  GITHUB_REPOSITORY fmtlib/fmt SYSTEM # used in case of cmake v3.25
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
 
@@ -80,10 +86,12 @@ set(sources include/greeter/greeter.h)
 # target: add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME} ${headers} ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${OPTION_ENABLE_UNITY})
 
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd for package user
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd for package user
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
@@ -111,7 +119,7 @@ package_project(
   NAME ${PROJECT_NAME}
   TARGETS ${PROJECT_NAME} project_options project_warnings
   PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
-  PUBLIC_DEPENDENCIES_CONFIGURED "fmt 8.1.1"
+  PUBLIC_DEPENDENCIES_CONFIGURED "fmt 9.1.0"
   # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
 )
 
@@ -129,7 +137,7 @@ package_project(
 #   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
 #   DISABLE_VERSION_SUFFIX YES
 #   COMPATIBILITY SameMajorVersion
-#   DEPENDENCIES "fmt 8.1.1"
+#   DEPENDENCIES "fmt 9.1.0"
 # )
 
 include(CPack)

@@ -8,10 +8,10 @@
   "configurePresets": [
     {
       "name": "default",
-      "displayName": "Default develop test Config",
+      "displayName": "Default develop all Config",
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
-      "binaryDir": "${sourceParentDir}/build/test",
+      "binaryDir": "${sourceParentDir}/build/all",
       "installDir": "${sourceParentDir}/stagedir",
       "cacheVariables": {
         "CMAKE_PREFIX_PATH": {
@@ -19,11 +19,11 @@
           "value": "${sourceParentDir}/stagedir"
         },
         "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_DEBUG_POSTFIX": "D",
         "CPM_USE_LOCAL_PACKAGES": "NO",
         "BUILD_SHARED_LIBS": "YES",
-        "TEST_INSTALLED_VERSION": "YES"
+        "ENABLE_TEST_COVERAGE": "YES"
       },
       "environment": {
         "CPM_USE_LOCAL_PACKAGES": "YES",
@@ -53,6 +53,11 @@
     {
       "name": "default",
       "configurePreset": "default"
+    },
+    {
+      "name": "format",
+      "configurePreset": "default",
+      "targets": ["fix-clang-format", "check-cmake-format"]
     }
   ],
   "testPresets": [
@@ -83,6 +88,10 @@
         {
           "type": "build",
           "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "format"
         },
         {
           "type": "test",

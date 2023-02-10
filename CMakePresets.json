@@ -2,32 +2,34 @@
   "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 23,
+    "minor": 25,
     "patch": 0
   },
   "configurePresets": [
     {
       "name": "default",
-      "displayName": "Default develop test Config",
+      "displayName": "Default user Config",
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
-      "binaryDir": "${sourceParentDir}/build/test",
-      "installDir": "${sourceParentDir}/stagedir",
+      "binaryDir": "${sourceDir}/build/user",
+      "installDir": "${sourceDir}/stagedir",
       "cacheVariables": {
         "CMAKE_PREFIX_PATH": {
           "type": "path",
-          "value": "${sourceParentDir}/stagedir"
+          "value": "${sourceDir}/stagedir"
         },
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_DEBUG_POSTFIX": "D",
-        "CPM_USE_LOCAL_PACKAGES": "NO",
-        "BUILD_SHARED_LIBS": "YES",
-        "TEST_INSTALLED_VERSION": "YES"
+        "BUILD_SHARED_LIBS": "NO"
       },
       "environment": {
         "CPM_USE_LOCAL_PACKAGES": "YES",
         "PATH": "$env{HOME}/.local/bin${pathListSep}$penv{PATH}"
+      },
+      "warnings": {
+        "deprecated": true,
+        "uninitialized": true
       }
     },
     {
@@ -53,14 +55,11 @@
     {
       "name": "default",
       "configurePreset": "default"
-    }
-  ],
-  "testPresets": [
+    },
     {
-      "name": "default",
+      "name": "install",
       "configurePreset": "default",
-      "output": {"outputOnFailure": true},
-      "execution": {"noTestsAction": "error", "stopOnFailure": true}
+      "targets": ["install"]
     }
   ],
   "packagePresets": [
@@ -85,7 +84,11 @@
           "name": "default"
         },
         {
-          "type": "test",
+          "type": "build",
+          "name": "install"
+        },
+        {
+          "type": "package",
           "name": "default"
         }
       ]

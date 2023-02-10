@@ -1,7 +1,7 @@
 # this script adds all subprojects to a single build to allow IDEs understand the full project
 # structure.
 
-cmake_minimum_required(VERSION 3.21...3.23)
+cmake_minimum_required(VERSION 3.21...3.25)
 
 project(BuildAll LANGUAGES CXX)
 

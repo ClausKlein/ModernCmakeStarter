@@ -1,16 +1,15 @@
+---
 name: Ubuntu
 
 on:
   push:
     branches:
-      - develop
       - master
-      - main
+      - develop
   pull_request:
     branches:
-      - develop
       - master
-      - main
+      - develop
 
 env:
   CTEST_OUTPUT_ON_FAILURE: 1
@@ -22,15 +21,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: "**/cpm_modules"
           key: ${{ github.workflow }}-cpm-modules-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake') }}
 
       - name: configure
-        run: cmake -Stest -Bbuild -DENABLE_TEST_COVERAGE=1 -DCMAKE_BUILD_TYPE=Debug
+        run: cmake -S test -B build -D ENABLE_TEST_COVERAGE=1 -D CMAKE_BUILD_TYPE=Debug
 
       - name: build
         run: cmake --build build -j4
