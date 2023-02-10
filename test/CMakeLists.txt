@@ -42,6 +42,4 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 enable_testing()
 
-
-# For other testing frameworks add the tests target instead:
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})

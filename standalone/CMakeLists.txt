@@ -45,7 +45,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME Greeter)
 # --- Test it ---
 
 enable_testing()
+
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME} --help)
+add_test(NAME ${PROJECT_NAME}-de COMMAND ${PROJECT_NAME} --lang=de)
+add_test(NAME ${PROJECT_NAME}-err COMMAND ${PROJECT_NAME} --lang=err)
 
 # --- Install it ---
 

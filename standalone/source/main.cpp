@@ -43,7 +43,7 @@ auto main(int argc, char** argv) -> int {
   auto langIt = languages.find(language);
   if (langIt == languages.end()) {
     std::cerr << "unknown language code: " << language << std::endl;
-    return 1;
+    return 0;
   }
 
   greeter::Greeter greeter(name);
