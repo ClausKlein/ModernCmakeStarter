@@ -24,7 +24,7 @@ This template is the result of learnings from many previous projects and should 
 - Continuous integration via [GitHub Actions](https://help.github.com/en/actions/)
 - Code coverage via [codecov](https://codecov.io)
 - Code formatting enforced by [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [cmake-format](https://github.com/cheshirekow/cmake_format) via [Format.cmake](https://github.com/TheLartians/Format.cmake)
-- Reproducible dependency management via [CPM.cmake](https://github.com/TheLartians/CPM.cmake)
+- Reproducible dependency management via [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake)
 - Installable target with automatic versioning information and header generation via [PackageProject.cmake](https://github.com/TheLartians/PackageProject.cmake)
 - Automatic [documentation](https://thelartians.github.io/ModernCppStarter) and deployment with [Doxygen](https://www.doxygen.nl) and [GitHub Pages](https://pages.github.com)
 - Configurable support for [sanitizer tools, and more](#additional-tools)
@@ -49,28 +49,27 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 
 ### Important note
 
-To cleanly separate the library and subproject code, the outer [CMakeLists.txt](CMakeLists.txt) only defines the library
-itself while the tests and other subprojects are self-contained in their own directories.  During development it is usually
-convenient to [build all subprojects at once](#build-everything-at-once).
+**To cleanly separate the library and subproject code, the outer [CMakeLists.txt](CMakeLists.txt) only defines the library
+itself while the tests and other subprojects are self-contained in their own directories.**
+During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
 
-### Build and test with cmake preset
+### Build the Release library, install it and test the exported CMake config Release package.
 
-see [test/CMakePresets.json](test/CMakePresets.json)
+see [./CMakeLists.txt](./CMakeLists.txt)
+and [./CMakePresets.json](./CMakePresets.json)
 
 ```bash
-cd test
-cmake --preset=ninja-multi
-cmake --build --preset=ninja-multi --config Release
-cmake --build --preset=ninja-multi --config Release --target help
-ctest --preset=ninja-multi   --build-config Release
-gcovr -r ..
+# make test_install -n
+cmake --workflow --preset default --fresh
+cd test && cmake --workflow --preset default --fresh
 ```
 
-### Build and run the standalone target
+### Build and run the standalone Release target
 
 see [standalone/CMakeLists.txt](standalone/CMakeLists.txt)
+and [standalone/CMakePresets.json](standalone/CMakePresets.json)
 
-Use the following command to build and run the executable target.
+Use the following command to build and run the Release executable target.
 
 ```bash
 cd standalone && cmake --workflow --preset=default
@@ -80,26 +79,32 @@ cmake --build build/standalone
 ./build/standalone/Greeter --help
 ```
 
-### Build and run test suite
+### Build and test a Release build with CMake default workflow preset
 
 see [test/CMakeLists.txt](test/CMakeLists.txt)
+and [test/CMakePresets.json](test/CMakePresets.json)
 
-Use the following commands from the project's root directory to run the test suite.
+Use the following commands from the project's root directory to run the Debug test suite.
 
 ```bash
 cd test && cmake --workflow --preset=default
-# or
-cmake -S test -B build/test
-cmake --build build/test
-CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
-
-# or simply call the executable:
-./build/test/GreeterTests
 ```
 
-To collect code coverage information, run CMake with the `-DENABLE_TEST_COVERAGE=1` option.
+### Build and test a Debug build with CMake default workflow preset
 
-It is simpler if you [build and test with cmake preset](#build-and-test-with-cmake-preset)
+see [all/CMakeLists.txt](all/CMakeLists.txt)
+and [all/CMakePresets.json](all/CMakePresets.json)
+
+```bash
+# make gcov -n
+cd all && cmake --preset default
+cmake --build build/all --target all
+cmake --build build/all --target test
+gcovr build/all
+
+# to direct call the executable use:
+./build/test/GreeterTestsD
+```
 
 ### Run clang-format
 
@@ -107,20 +112,18 @@ Use the following commands from the project's root directory to check and fix C+
 This requires _clang-format_, _cmake-format_ and _pyyaml_ to be installed on the current system.
 
 ```bash
-cmake -S test -B build/test
-
-# view changes
-cmake --build build/test --target format
-
-# apply changes
-cmake --build build/test --target fix-format
+# make format -n
+cd all && cmake --preset default
+cmake --build build/all --target format
+# or
+cmake --build build/all --target check-format
 ```
 
 See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
 These dependencies can be easily installed using pip.
 
 ```bash
-pip install clang-format==14.0.6 cmake_format==0.6.11 pyyaml
+pip3 install -r requirements.txt
 ```
 
 ### Build the documentation
@@ -138,27 +141,23 @@ open build/doc/doxygen/html/index.html
 
 To build the documentation locally, you will need Doxygen, jinja2 and Pygments installed on your system.
 
-### Build everything at once
+## Build everything at once
 
-see [all/CMakeLists.txt](all/CMakeLists.txt)
+**Note: This workflow is for Developers only and their targest must not installed!**
 
-The project also includes an `all` directory that allows building all targets at the same time.
+The project also includes an `all` directory that allows building all Debug targets at the same time.
 This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.
 
 ```bash
 cd all && cmake --workflow --preset=default
-# or
-cmake -S all -B build
-cmake --build build
-
-# run tests
-./build/test/GreeterTests
-# format code
-cmake --build build --target fix-format
-# run standalone
-./build/standalone/Greeter --help
 # build docs
-cmake --build build --target GenerateDocs
+cmake --build build/all --target GenerateDocs
+
+# to run-clang-tidy on all sources:
+# make check -n
+cd all && cmake --preset default
+perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e "s#-I($CPM_SOURCE_CACHE)#-isystem $1#g;" build/all/compile_commands.json
+run-clang-tidy -p build/all */source
 ```
 
 ### Additional tools
@@ -212,7 +211,7 @@ This has the advantage that individual libraries and components can be improved 
 
 > You recommend to add external dependencies using CPM.cmake. Will this force users of my library to use CPM.cmake as well?
 
-[CPM.cmake](https://github.com/TheLartians/CPM.cmake) should be invisible to library users as it's a self-contained CMake Script.
+[CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) should be invisible to library users as it's a self-contained CMake Script.
 If problems do arise, users can always opt-out by defining the CMake or env variable [`CPM_USE_LOCAL_PACKAGES`](https://github.com/cpm-cmake/CPM.cmake#options), which will override all calls to `CPMAddPackage` with the according `find_package` call.
 This should also enable users to use the project with their favorite external C++ dependency manager, such as vcpkg or Conan.
 

@@ -96,9 +96,6 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd fo
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
-# FIXME: should be PRIVATE! CK
-target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
-
 # target_include_directories with the SYSTEM modifier will request the compiler
 # to omit warnings from the provided paths, if the compiler supports that
 target_include_directories(
@@ -107,6 +104,7 @@ target_include_directories(
 )
 
 if(CMAKE_SKIP_INSTALL_RULES)
+  target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
   return()
 endif()
 
@@ -117,7 +115,7 @@ endif()
 # all targets recursively found for the current folder if not specified.
 package_project(
   NAME ${PROJECT_NAME}
-  TARGETS ${PROJECT_NAME} project_options project_warnings
+  TARGETS ${PROJECT_NAME}
   PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
   PUBLIC_DEPENDENCIES_CONFIGURED "fmt 9.1.0"
   # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
