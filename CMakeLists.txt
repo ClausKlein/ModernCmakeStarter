@@ -55,6 +55,7 @@ CPMAddPackage(
   GITHUB_REPOSITORY fmtlib/fmt SYSTEM # used in case of cmake v3.25
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
+target_disable_clang_tidy(fmt)
 
 # ---- Setup default project_options ----
 
@@ -103,7 +104,7 @@ target_include_directories(
                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-if(CMAKE_SKIP_INSTALL_RULES)
+if(CMAKE_SKIP_INSTALL_RULES OR CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
   return()
 endif()

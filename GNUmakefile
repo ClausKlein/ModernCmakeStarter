@@ -3,8 +3,11 @@
 # Gitlab mirror.
 #TODO export GIT_CONFIG_PARAMETERS='url.git@code.example.com:mirror/github.com/.insteadOf=https://github.com/'
 
-export CXX=g++
-export CC=gcc
+# export CXX=g++-12
+# export CC=gcc-12
+
+# export CXX=clang++
+# export CC=clang
 
 export CPM_USE_LOCAL_PACKAGES=NO
 export CPM_SOURCE_CACHE=${HOME}/.cache/CPM

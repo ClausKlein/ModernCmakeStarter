@@ -15,6 +15,7 @@ set(ENABLE_DEVELOPER_MODE
 # Change this to OFF if you want to disable warnings_as_errors in developer mode
 set(WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT ON)
 set(ENABLE_COVERAGE_DEVELOPER_DEFAULT ON)
+set(ENABLE_CLANG_TIDY OFF)
 
 include(../cmake/tools.cmake)
 
