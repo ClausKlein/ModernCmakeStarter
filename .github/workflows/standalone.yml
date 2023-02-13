@@ -33,4 +33,4 @@ jobs:
         run: cmake --build build -j4
 
       - name: run
-        run: ./build/Greeter
+        run: cmake --build build --target test
