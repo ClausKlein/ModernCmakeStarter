@@ -18,8 +18,14 @@ include(../cmake/options.cmake)
 
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 
-CPMAddPackage("gh:doctest/doctest@2.4.9")
-if(doctest_ADDED)
+#XXX CPMAddPackage("gh:doctest/doctest@2.4.9")
+CPMAddPackage(
+  GITHUB_REPOSITORY "doctest/doctest"
+  VERSION "2.4.9" EXCLUDE_FROM_ALL YES
+  DOWNLOAD_ONLY YES SYSTEM YES # used in case of cmake v3.25
+)
+if(doctest_ADDED AND NOT TARGET doctest)
+  add_subdirectory(${doctest_SOURCE_DIR} doctest::doctest SYSTEM EXCLUDE_FROM_ALL)
   message(TRACE "add_subdirectory(${doctest_SOURCE_DIR} doctest SYSTEM EXCLUDE_FROM_ALL)")
   target_disable_clang_tidy(doctest)
   set_system_property(${doctest_SOURCE_DIR})

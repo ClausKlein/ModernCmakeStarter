@@ -47,10 +47,12 @@ include(cmake/options.cmake)
 CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
-  GITHUB_REPOSITORY fmtlib/fmt SYSTEM # used in case of cmake v3.25
+  GITHUB_REPOSITORY fmtlib/fmt EXCLUDE_FROM_ALL YES
+  DOWNLOAD_ONLY YES SYSTEM YES # used in case of cmake v3.25
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
-if(fmt_ADDED)
+if(fmt_ADDED AND NOT TARGET fmt::fmt)
+  add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)
   message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)")
   target_disable_clang_tidy(fmt)
   set_system_property(${fmt_SOURCE_DIR})
