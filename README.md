@@ -53,7 +53,7 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 itself while the tests and other subprojects are self-contained in their own directories.**
 During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
 
-### Build the Release library, install it and test the exported CMake config Release package.
+### Build, test and install the library
 
 see [./CMakeLists.txt](./CMakeLists.txt)
 and [./CMakePresets.json](./CMakePresets.json)
