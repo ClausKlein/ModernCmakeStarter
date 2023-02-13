@@ -2,7 +2,7 @@
   "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 23,
+    "minor": 25,
     "patch": 0
   },
   "configurePresets": [
@@ -23,7 +23,7 @@
         "CMAKE_DEBUG_POSTFIX": "D",
         "CPM_USE_LOCAL_PACKAGES": "NO",
         "OPTION_ENABLE_UNITY": "NO",
-        "OPT_ENABLE_CLANG_TIDY": "YES",
+        "OPT_ENABLE_CLANG_TIDY": "NO",
         "BUILD_SHARED_LIBS": "YES",
         "ENABLE_TEST_COVERAGE": "YES"
       },
