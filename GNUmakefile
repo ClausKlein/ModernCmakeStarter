@@ -31,7 +31,7 @@ test: setup
 	cmake --build $(BUILD_DIR)/all --target $@
 
 check: setup
-	run-clang-tidy -p $(BUILD_DIR)/all */source
+	run-clang-tidy -extra-arg=-Wno-unknown-warning-option -p $(BUILD_DIR)/all */source
 
 setup:
 	cd all && cmake --preset default

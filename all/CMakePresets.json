@@ -23,6 +23,7 @@
         "CMAKE_DEBUG_POSTFIX": "D",
         "CPM_USE_LOCAL_PACKAGES": "NO",
         "OPTION_ENABLE_UNITY": "NO",
+        "OPTION_ENABLE_CLANG_TIDY": "NO",
         "BUILD_SHARED_LIBS": "YES",
         "ENABLE_TEST_COVERAGE": "YES"
       },

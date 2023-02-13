@@ -16,8 +16,6 @@ set(ENABLE_PCH_DEFAULT NO) # for user and developer builds
 
 # It is strongly recomonded to NOT use this as precompile step!
 set(ENABLE_CPPCHECK_DEFAULT NO) # for user and developer builds
-# run_clang-tdiy -p build-dir ...
-set(ENABLE_CLANG_TIDY_DEFAULT NO) # for user and developer builds
 
 # ---- Project ----
 
@@ -31,23 +29,20 @@ project(
 # to get CMAKE_INSTALL_INCLUDEDIR
 include(GNUInstallDirs)
 
+# ---- local Options ----
+
 if(NOT PROJECT_IS_TOP_LEVEL)
   option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" YES)
 endif()
 
-option(OPTION_ENABLE_UNITY "Enable Unity builds of project" ON)
+# --- Import project options ----
+
+include(cmake/options.cmake)
 
 # ---- Add dependencies via CPM ----
-# see https://github.com/TheLartians/CPM.cmake for more info
-
-include(cmake/CPM.cmake)
-
-# see https://github.com/aminya/project_options for more info
-CPMAddPackage("gh:aminya/project_options@0.26.3")
-list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)
 
 # PackageProject.cmake will be used to make our target installable
-CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
+#XXX CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
 CPMAddPackage(
   NAME fmt
@@ -56,7 +51,9 @@ CPMAddPackage(
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
 if(fmt_ADDED)
+  message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)")
   target_disable_clang_tidy(fmt)
+  set_system_property(${fmt_SOURCE_DIR})
 endif()
 
 # ---- Setup default project_options ----
@@ -90,7 +87,7 @@ set(_sources include/greeter/greeter.h)
 add_library(${PROJECT_NAME} ${_headers} ${_sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_${CMAKE_CXX_STANDARD})
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${OPTION_ENABLE_UNITY})
 
 # being a cross-platform target, we enforce standards conformance on MSVC
@@ -122,24 +119,7 @@ package_project(
   TARGETS ${PROJECT_NAME}
   PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
   PUBLIC_DEPENDENCIES_CONFIGURED "fmt 9.1.0"
-  # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
+  # NOTE(CK): NO! XXX PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
 )
-
-# # the location where the project's version header will be placed should match the project's regular
-# # header paths
-# string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
-#
-# packageProject(
-#   NAME ${PROJECT_NAME}
-#   VERSION ${PROJECT_VERSION}
-#   NAMESPACE ${PROJECT_NAME}
-#   BINARY_DIR ${PROJECT_BINARY_DIR}
-#   INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
-#   INCLUDE_DESTINATION include/${PROJECT_NAME}
-#   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
-#   DISABLE_VERSION_SUFFIX YES
-#   COMPATIBILITY SameMajorVersion
-#   DEPENDENCIES "fmt 9.1.0"
-# )
 
 include(CPack)

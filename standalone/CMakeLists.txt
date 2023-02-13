@@ -9,18 +9,9 @@ if(PROJECT_IS_TOP_LEVEL AND CMAKE_BUILD_TYPE STREQUAL "Release")
   )
 endif()
 
-option(OPTION_ENABLE_UNITY "Enable Unity builds of project" ON)
+# --- Import project options ----
 
-# --- Import tools ----
-
-# XXX include(../cmake/tools.cmake)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-include(../cmake/CPM.cmake)
-
-CPMAddPackage("gh:aminya/project_options@0.26.3")
-list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)
-include(StaticAnalyzers) # for target_disable_clang_tidy()
+include(../cmake/options.cmake)
 
 # ---- Dependencies ----
 
@@ -30,7 +21,9 @@ CPMAddPackage(
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 )
 if(cxxopts_ADDED)
+  message(TRACE "add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts SYSTEM EXCLUDE_FROM_ALL)")
   target_disable_clang_tidy(cxxopts)
+  set_system_property(${cxxopts_SOURCE_DIR})
 endif()
 
 CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
