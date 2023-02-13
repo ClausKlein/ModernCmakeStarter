@@ -55,7 +55,9 @@ CPMAddPackage(
   GITHUB_REPOSITORY fmtlib/fmt SYSTEM # used in case of cmake v3.25
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
-target_disable_clang_tidy(fmt)
+if(fmt_ADDED)
+  target_disable_clang_tidy(fmt)
+endif()
 
 # ---- Setup default project_options ----
 
@@ -76,17 +78,18 @@ target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
-# XXX file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
-# XXX file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
-set(headers source/greeter.cpp)
-set(sources include/greeter/greeter.h)
+# XXX file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+# XXX file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+set(_headers source/greeter.cpp)
+set(_sources include/greeter/greeter.h)
 
 # ---- Create library ----
 
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
 # target: add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME} ${headers} ${sources})
+add_library(${PROJECT_NAME} ${_headers} ${_sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${OPTION_ENABLE_UNITY})
 

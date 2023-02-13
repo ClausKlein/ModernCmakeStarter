@@ -12,20 +12,29 @@ option(TEST_INSTALLED_VERSION "Test the version found by find_package" OFF)
 
 # --- Import tools ----
 
-include(../cmake/tools.cmake)
-
-# ---- Dependencies ----
+# XXX include(../cmake/tools.cmake)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 include(../cmake/CPM.cmake)
 
-CPMAddPackage("gh:doctest/doctest@2.4.9")
+CPMAddPackage("gh:aminya/project_options@0.26.3")
+list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)
+include(StaticAnalyzers) # for target_disable_clang_tidy()
+
+# ---- Dependencies ----
+
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
+
+CPMAddPackage("gh:doctest/doctest@2.4.9")
+if(doctest_ADDED)
+  target_disable_clang_tidy(doctest)
+endif()
 
 if(TEST_INSTALLED_VERSION) # FIXME: or if(PROJECT_IS_TOP_LEVEL)
   find_package(greeter 1.1 REQUIRED)
   message(STATUS "Found ${Greeter_DIR}")
 else()
-  CPMAddPackage(NAME Greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+  CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
   target_disable_clang_tidy(doctest)
 endif()
 

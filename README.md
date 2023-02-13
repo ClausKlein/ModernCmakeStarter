@@ -53,23 +53,26 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 itself while the tests and other subprojects are self-contained in their own directories.**
 During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
 
-### Build, test and install the library
+### Build, install, and test the Release library
 
 see [./CMakeLists.txt](./CMakeLists.txt)
 and [./CMakePresets.json](./CMakePresets.json)
+
+Use the following commands to install the **Release** libray and test the installed CMake export config package:
 
 ```bash
 # make test_install -n
 cmake --workflow --preset default --fresh
 cd test && cmake --workflow --preset default --fresh
+cd standalone && cmake --workflow --preset default --fresh
 ```
 
-### Build and run the standalone Release target
+### Build, test, and install the standalone Release targets and its dependencies
 
 see [standalone/CMakeLists.txt](standalone/CMakeLists.txt)
 and [standalone/CMakePresets.json](standalone/CMakePresets.json)
 
-Use the following command to build and run the Release executable target.
+Use the following command to build, test, and install the **Release** executable target:
 
 ```bash
 cd standalone && cmake --workflow --preset=default
@@ -79,21 +82,23 @@ cmake --build build/standalone
 ./build/standalone/Greeter --help
 ```
 
-### Build and test a Release build with CMake default workflow preset
+### Build and test the installed Release version of the libray
 
 see [test/CMakeLists.txt](test/CMakeLists.txt)
 and [test/CMakePresets.json](test/CMakePresets.json)
 
-Use the following commands from the project's root directory to run the Debug test suite.
+Use the following commands to run the **Release** test suite at once:
 
 ```bash
 cd test && cmake --workflow --preset=default
 ```
 
-### Build and test a Debug build with CMake default workflow preset
+### Build and test a Debug build with CMake and generate a test coverage report with gcovr
 
 see [all/CMakeLists.txt](all/CMakeLists.txt)
 and [all/CMakePresets.json](all/CMakePresets.json)
+
+Use the following commands to run the **Debug** test suite at once:
 
 ```bash
 # make gcov -n
@@ -156,7 +161,7 @@ cmake --build build/all --target GenerateDocs
 # to run-clang-tidy on all sources:
 # make check -n
 cd all && cmake --preset default
-perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e "s#-I($CPM_SOURCE_CACHE)#-isystem $1#g;" build/all/compile_commands.json
+perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e "s#-I($CPM_SOURCE_CACHE)#-isystem \$1#g;" build/all/compile_commands.json
 run-clang-tidy -p build/all */source
 ```
 

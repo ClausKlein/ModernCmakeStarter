@@ -1,7 +1,3 @@
-# The "bootstrap" part clones repositories (with hardwired paths). With the
-# help of the below setting, we can redirect these clones to our internal
-# Gitlab mirror.
-#TODO export GIT_CONFIG_PARAMETERS='url.git@code.example.com:mirror/github.com/.insteadOf=https://github.com/'
 
 # export CXX=g++-12
 # export CC=gcc-12
@@ -48,6 +44,7 @@ install:
 
 test_install: install
 	cd test && cmake --workflow --preset default --fresh
+	cd standalone && cmake --workflow --preset default --fresh
 
 ################################
 
