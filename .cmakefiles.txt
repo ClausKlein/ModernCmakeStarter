@@ -1,7 +1,11 @@
 ./CMakeLists.txt
+./CMakePresets.json
 ./all/CMakeLists.txt
+./all/CMakePresets.json
 ./cmake/CPM.cmake
-./cmake/tools.cmake
+./cmake/options.cmake
 ./documentation/CMakeLists.txt
 ./standalone/CMakeLists.txt
+./standalone/CMakePresets.json
 ./test/CMakeLists.txt
+./test/CMakePresets.json

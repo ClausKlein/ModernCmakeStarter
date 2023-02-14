@@ -3,9 +3,6 @@ format:
   line_width: 100
   dangle_parens: true
 
-markup:
-  enable_markup: false
-
 parse:
   additional_commands:
     cpmaddpackage:
@@ -36,12 +33,21 @@ parse:
         DOWNLOAD_NO_EXTRACT: 1
         HTTP_USERNAME: 1
         HTTP_PASSWORD: 1
+        EXCLUDE_FROM_ALL: 1
+        SOURCE_SUBDIR: 1
+        SYSTEM: 1
         OPTIONS: +
     cpmfindpackage:
       pargs:
         nargs: '*'
         flags: []
       spelling: CPMFindPackage
+      kwargs: *cpmaddpackagekwargs
+    cpmdeclarepackage:
+      pargs:
+        nargs: '*'
+        flags: []
+      spelling: CPMDeclarePackage
       kwargs: *cpmaddpackagekwargs
     packageproject:
       pargs:
@@ -51,33 +57,18 @@ parse:
       kwargs:
         NAME: 1
         VERSION: 1
-        NAMESPACE: 1
         INCLUDE_DIR: 1
         INCLUDE_DESTINATION: 1
-        INCLUDE_HEADER_PATTERN: 1
         BINARY_DIR: 1
         COMPATIBILITY: 1
         VERSION_HEADER: 1
-        EXPORT_HEADER: 1
-        DISABLE_VERSION_SUFFIX: 1
         DEPENDENCIES: +
-    package_project:
-      pargs:
-        nargs: '*'
-        flags: []
-      spelling: package_project
-      kwargs:
-        NAME: 1
-        VERSION: 1
-        COMPATIBILITY: 1
-        CONFIG_EXPORT_DESTINATION: 1
-        CONFIG_INSTALL_DESTINATION: 1
-        TARGETS: +
-        INTERFACE_INCLUDES: +
-        PUBLIC_INCLUDES: +
-        INTERFACE_DEPENDENCIES_CONFIGURED: +
-        PUBLIC_DEPENDENCIES_CONFIGURED: +
-        INTERFACE_DEPENDENCIES: +
-        PUBLIC_DEPENDENCIES: +
-        PRIVATE_DEPENDENCIES_CONFIGURED: +
-        PRIVATE_DEPENDENCIES: +
+    cpmusepackagelock:
+      pargs: 1
+      spelling: CPMUsePackageLock
+    cpmregisterpackage:
+      pargs: 1
+      spelling: CPMRegisterPackage
+    cpmgetpackageversion:
+      pargs: 2
+      spelling: CPMGetPackageVersion
