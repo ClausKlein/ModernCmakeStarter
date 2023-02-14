@@ -7,3 +7,5 @@
 .DS_Store
 CMakeUserPresets.json
 cmake/WarningsAsErrors.cmake
+CMakeCache.txt
+CMakeFiles/

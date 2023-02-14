@@ -7,9 +7,9 @@ project(BuildAll LANGUAGES CXX)
 
 # ---- local Options ----
 
-# Note: by default ENABLE_DEVELOPER_MODE is True.
-# This means that all analysis (sanitizers, static analysis) is enabled and all warnings are treated as errors.
-# if you want to switch this behavior, change TRUE to FALSE
+# Note: by default ENABLE_DEVELOPER_MODE is True. This means that all analysis (sanitizers, static
+# analysis) is enabled and all warnings are treated as errors. if you want to switch this behavior,
+# change TRUE to FALSE
 set(ENABLE_DEVELOPER_MODE
     ON # ${PROJECT_IS_TOP_LEVEL}
     CACHE BOOL "Enable 'developer mode'"

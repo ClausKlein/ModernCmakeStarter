@@ -41,20 +41,21 @@ include(cmake/options.cmake)
 
 # ---- Add dependencies via CPM ----
 
-# PackageProject.cmake will be used to make our target installable
-#XXX CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
+# PackageProject.cmake will be used to make our target installable XXX
+# CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
-option(FMT_INSTALL "create an installable target" YES)
+# XXX option(FMT_INSTALL "create an installable target" YES)
 CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
-  GITHUB_REPOSITORY fmtlib/fmt EXCLUDE_FROM_ALL YES
-  DOWNLOAD_ONLY YES SYSTEM YES # used in case of cmake v3.25
-  #XXX OPTIONS "FMT_INSTALL YES" # create an installable target
+  GITHUB_REPOSITORY fmtlib/fmt
+  EXCLUDE_FROM_ALL YES
+  # TODO DOWNLOAD_ONLY YES
+  SYSTEM YES # used in case of cmake v3.25
+  OPTIONS "FMT_INSTALL YES" # create an installable target
 )
-if(fmt_ADDED AND NOT TARGET fmt::fmt)
-  add_subdirectory(${fmt_SOURCE_DIR} fmt # SYSTEM EXCLUDE_FROM_ALL
-  )
+if(fmt_SOURCE_DIR) # TODO AND NOT TARGET fmt::fmt)
+  # TODO add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)
   message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)")
   target_disable_clang_tidy(fmt)
   set_system_property(${fmt_SOURCE_DIR})
@@ -63,9 +64,8 @@ endif()
 # ---- Setup default project_options ----
 
 include(DynamicProjectOptions)
-# Initialize project_options variable related to this project
-# This overwrites `project_options` and sets `project_warnings`
-# uncomment the options to enable them:
+# Initialize project_options variable related to this project This overwrites `project_options` and
+# sets `project_warnings` uncomment the options to enable them:
 # cmake-format: off
 dynamic_project_options(
   # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
@@ -78,9 +78,9 @@ target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 # ---- Add source files ----
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
-# automatically. Keep that in mind when changing files, or explicitly mention them here.
-# XXX file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
-# XXX file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+# automatically. Keep that in mind when changing files, or explicitly mention them here. XXX
+# file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h") XXX
+# file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
 set(_headers source/greeter.cpp)
 set(_sources include/greeter/greeter.h)
 
@@ -101,8 +101,8 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd fo
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
-# target_include_directories with the SYSTEM modifier will request the compiler
-# to omit warnings from the provided paths, if the compiler supports that
+# target_include_directories with the SYSTEM modifier will request the compiler to omit warnings
+# from the provided paths, if the compiler supports that
 target_include_directories(
   ${PROJECT_NAME} SYSTEM PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
@@ -116,13 +116,17 @@ endif()
 # ---- Create an installable target ----
 # this allows users to install and find the library via `find_package()`.
 
-# Add other targets that you want installe here. Or be default we just package
-# all targets recursively found for the current folder if not specified.
+# Add other targets that you want installe here. Or be default we just package all targets
+# recursively found for the current folder if not specified.
 package_project(
-  NAME ${PROJECT_NAME}
-  TARGETS ${PROJECT_NAME}
-  PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
-  PUBLIC_DEPENDENCIES_CONFIGURED "fmt 9.1.0"
+  NAME
+  ${PROJECT_NAME}
+  TARGETS
+  ${PROJECT_NAME}
+  PUBLIC_INCLUDES
+  ${PROJECT_SOURCE_DIR}/include
+  PUBLIC_DEPENDENCIES_CONFIGURED
+  "fmt 9.1.0"
   # NOTE(CK): NO! XXX PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
 )
 

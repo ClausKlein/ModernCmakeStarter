@@ -23,7 +23,7 @@
         "CMAKE_DEBUG_POSTFIX": "D",
         "CPM_USE_LOCAL_PACKAGES": "NO",
         "OPTION_ENABLE_UNITY": "NO",
-        "OPT_ENABLE_CLANG_TIDY": "NO",
+        "OPTION_ENABLE_CLANG_TIDY": "YES",
         "BUILD_SHARED_LIBS": "YES",
         "ENABLE_TEST_COVERAGE": "YES"
       },
@@ -59,7 +59,7 @@
     {
       "name": "format",
       "configurePreset": "default",
-      "targets": ["fix-clang-format", "check-cmake-format"]
+      "targets": ["fix-clang-format", "fix-cmake-format"]
     }
   ],
   "testPresets": [

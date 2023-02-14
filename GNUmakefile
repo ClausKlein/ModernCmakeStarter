@@ -31,10 +31,10 @@ test: setup
 	cmake --build $(BUILD_DIR)/all --target $@
 
 check: setup
-	run-clang-tidy -extra-arg=-Wno-unknown-warning-option -p $(BUILD_DIR)/all */source
+	run-clang-tidy -extra-arg=-Wno-unknown-warning-option -p $(BUILD_DIR)/all source */source
 
 setup:
-	cd all && cmake --preset default
+	cd all && cmake --preset default --log-level=TRACE
 	#XXX perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $(BUILD_DIR)/all/compile_commands.json
 
 ################################

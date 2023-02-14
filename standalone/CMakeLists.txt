@@ -17,12 +17,14 @@ include(../cmake/options.cmake)
 
 CPMAddPackage(
   GITHUB_REPOSITORY jarro2783/cxxopts
-  VERSION 3.0.0 EXCLUDE_FROM_ALL YES
-  DOWNLOAD_ONLY YES SYSTEM YES # used in case of cmake v3.25
+  VERSION 3.0.0
+  EXCLUDE_FROM_ALL YES
+  # TODO DOWNLOAD_ONLY YES
+  SYSTEM YES # used in case of cmake v3.25
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 )
-if(cxxopts_ADDED AND NOT TARGET cxxopts)
-  add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts::cxxopts SYSTEM EXCLUDE_FROM_ALL)
+if(cxxopts_SOURCE_DIR) # TODO AND NOT TARGET cxxopts)
+  # TODO add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts::cxxopts SYSTEM EXCLUDE_FROM_ALL)
   message(TRACE "add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts SYSTEM EXCLUDE_FROM_ALL)")
   target_disable_clang_tidy(cxxopts)
   set_system_property(${cxxopts_SOURCE_DIR})
