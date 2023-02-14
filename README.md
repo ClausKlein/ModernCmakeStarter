@@ -52,19 +52,25 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 **To cleanly separate the library and subproject code, the outer
 [CMakeLists.txt](CMakeLists.txt) only defines the library itself while the
 tests and other subprojects are self-contained in their own directories.**
+
 During development it is usually convenient to [build all subprojects at
 once](#build-everything-at-once).
+
+A GNUmakefile encapsulates the most common tasks. Where this is not feasible
+the underlying cmake commands are shown as an alternative.
 
 ### Build, install, and test the Release library
 
 see [./CMakeLists.txt](./CMakeLists.txt)
 and [./CMakePresets.json](./CMakePresets.json)
 
-Use the following commands to install the **Release** libray and test the
+Use the following commands to install the **Release** library and test the
 installed CMake export config package:
 
 ```bash
 make test_install
+
+## This is equivalent to call:
 # cmake --workflow --preset default --fresh
 # cd test && cmake --workflow --preset default --fresh
 # cd standalone && cmake --workflow --preset default --fresh
@@ -80,11 +86,13 @@ executable target:
 
 ```bash
 make standalone
+
+## This is equivalent to call:
 # cmake --workflow --preset default --fresh
 # cd test && cmake --workflow --preset default --fresh
 # cd standalone && cmake --workflow --preset default --fresh
 
-# to direct call the executable use:
+# to directly call the executable use:
 ./build/standalone/greeter --help
 ```
 
@@ -108,12 +116,14 @@ Use the following commands to run the **Debug** test suite at once:
 
 ```bash
 make gcov
+
+## This is equivalent to call:
 # cd all && cmake --preset default
 # cmake --build build/all --target all
 # cmake --build build/all --target test
 # gcovr build/all
 
-# to direct call the executable use:
+# to directly call the executable use:
 ./build/test/GreeterTestsD
 ```
 
@@ -125,9 +135,12 @@ _pyyaml_ to be installed on the current system.
 
 ```bash
 make format
+
+## This is equivalent to call:
 # cd all && cmake --preset default
 # cmake --build build/all --target format
-### or
+
+### you may check it manually this way:
 # cmake --build build/all --target check-format
 ```
 
@@ -157,7 +170,7 @@ installed on your system.
 
 ## Build everything at once
 
-**Note: This workflow is for Developers only and their targest must not installed!**
+**Note: This workflow is for developers only and their targets must not be installed!**
 
 The project also includes an `all` directory that allows building all **Debug**
 targets at the same time.  This is useful during development, as it exposes all
@@ -190,7 +203,7 @@ cd all && ccmake .
 
 #### Static Analyzers
 
-Static Analyzers are enabled by default for Developers at the all subdirectory
+Static Analyzers are enabled by default for developers at the all subdirectory
 
 By default, analyzers will automatically find configuration files such as `.clang-format`.
 
