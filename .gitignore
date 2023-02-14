@@ -1,4 +1,11 @@
+*~
+*.swp
 /build*
+/stagedir
 /.vscode
 /cpm_modules
 .DS_Store
+CMakeUserPresets.json
+cmake/WarningsAsErrors.cmake
+CMakeCache.txt
+CMakeFiles/

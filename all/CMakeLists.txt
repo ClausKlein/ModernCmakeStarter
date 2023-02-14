@@ -1,13 +1,15 @@
 # this script adds all subprojects to a single build to allow IDEs understand the full project
 # structure.
 
-cmake_minimum_required(VERSION 3.21...3.24)
+cmake_minimum_required(VERSION 3.21...3.25)
 
 project(BuildAll LANGUAGES CXX)
 
-# Note: by default ENABLE_DEVELOPER_MODE is True.
-# This means that all analysis (sanitizers, static analysis) is enabled and all warnings are
-# treated as errors. If you want to switch this behavior, change TRUE to FALSE
+# ---- local Options ----
+
+# Note: by default ENABLE_DEVELOPER_MODE is True. This means that all analysis (sanitizers, static
+# analysis) is enabled and all warnings are treated as errors. if you want to switch this behavior,
+# change TRUE to FALSE
 set(ENABLE_DEVELOPER_MODE
     ON # ${PROJECT_IS_TOP_LEVEL}
     CACHE BOOL "Enable 'developer mode'"
@@ -15,8 +17,11 @@ set(ENABLE_DEVELOPER_MODE
 # Change this to OFF if you want to disable warnings_as_errors in developer mode
 set(WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT ON)
 set(ENABLE_COVERAGE_DEVELOPER_DEFAULT ON)
+set(ENABLE_CLANG_TIDY_DEVELOPER_DEFAULT OFF)
 
-# XXX include(../cmake/tools.cmake)
+# --- Import project options ----
+
+include(../cmake/options.cmake)
 
 # needed to generate test target
 enable_testing()

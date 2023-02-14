@@ -1,7 +1,7 @@
 #include <fmt/format.h>
 #include <greeter/greeter.h>
 
-using namespace greeter;
+using greeter::Greeter;
 
 Greeter::Greeter(std::string _name) : name(std::move(_name)) {}
 

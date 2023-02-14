@@ -8,10 +8,10 @@
   "configurePresets": [
     {
       "name": "default",
-      "displayName": "Default develop test Config",
+      "displayName": "Default standalone Config",
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
-      "binaryDir": "${sourceParentDir}/build/test",
+      "binaryDir": "${sourceParentDir}/build/standalone",
       "installDir": "${sourceParentDir}/stagedir",
       "cacheVariables": {
         "CMAKE_PREFIX_PATH": {
@@ -21,9 +21,8 @@
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_DEBUG_POSTFIX": "D",
-        "CPM_USE_LOCAL_PACKAGES": "NO",
-        "BUILD_SHARED_LIBS": "YES",
-        "TEST_INSTALLED_VERSION": "YES"
+        "CPM_USE_LOCAL_PACKAGES": "YES",
+        "BUILD_SHARED_LIBS": "YES"
       },
       "environment": {
         "CPM_USE_LOCAL_PACKAGES": "YES",
@@ -53,6 +52,11 @@
     {
       "name": "default",
       "configurePreset": "default"
+    },
+    {
+      "name": "install",
+      "configurePreset": "default",
+      "targets": ["install"]
     }
   ],
   "testPresets": [
@@ -86,6 +90,14 @@
         },
         {
           "type": "test",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "install"
+        },
+        {
+          "type": "package",
           "name": "default"
         }
       ]

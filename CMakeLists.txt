@@ -1,7 +1,7 @@
 #
 # this project is for using as a sub project with add_subdirectory() or with CPMAddPackage()
 #
-cmake_minimum_required(VERSION 3.21...3.24)
+cmake_minimum_required(VERSION 3.21...3.25)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
 # the same version
@@ -16,8 +16,6 @@ set(ENABLE_PCH_DEFAULT NO) # for user and developer builds
 
 # It is strongly recomonded to NOT use this as precompile step!
 set(ENABLE_CPPCHECK_DEFAULT NO) # for user and developer builds
-# run_clang-tdiy -p build-dir ...
-set(ENABLE_CLANG_TIDY_DEFAULT NO) # for user and developer builds
 
 # ---- Project ----
 
@@ -31,48 +29,62 @@ project(
 # to get CMAKE_INSTALL_INCLUDEDIR
 include(GNUInstallDirs)
 
+# ---- local Options ----
+
+if(NOT PROJECT_IS_TOP_LEVEL)
+  message(WARNING "set(CMAKE_SKIP_INSTALL_RULES YES)")
+  option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" YES)
+endif()
+
+# --- Import project options ----
+
+include(cmake/options.cmake)
+
 # ---- Add dependencies via CPM ----
-# see https://github.com/TheLartians/CPM.cmake for more info
-
-include(cmake/CPM.cmake)
-
-# see https://github.com/aminya/project_options for more info
-CPMAddPackage("gh:aminya/project_options@0.25.1")
-list(APPEND CMAKE_MODULE_PATH ${ProjectOptions_SRC_DIR})
-#XXX list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR})
 
 # PackageProject.cmake will be used to make our target installable
-CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
+CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
+# NOTE: The fmt library must be installed if not found! BUT ether clang-tidy checks nor compiler
+# warnings are wanted!
+
+# FIXME: EXCLUDE_FROM_ALL must be off or fmt will not be installed! CK
+option(FMT_INSTALL "create an installable target" YES)
 CPMAddPackage(
   NAME fmt
-  GIT_TAG 8.1.1
+  GIT_TAG 9.1.0
   GITHUB_REPOSITORY fmtlib/fmt
-  OPTIONS "FMT_INSTALL YES" # create an installable target
+  EXCLUDE_FROM_ALL NO
+  # TODO DOWNLOAD_ONLY YES
+  SYSTEM YES # used in case of cmake v3.25
 )
+if(fmt_SOURCE_DIR) # TODO AND NOT TARGET fmt::fmt)
+  # TODO add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)
+  message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)")
+  target_disable_clang_tidy(fmt)
+  check_system_property(${fmt_SOURCE_DIR})
+endif()
 
 # ---- Setup default project_options ----
 
 include(DynamicProjectOptions)
-# Initialize project_options variable related to this project
-# This overwrites `project_options` and sets `project_warnings`
-# uncomment the options to enable them:
+# Initialize project_options variable related to this project This overwrites `project_options` and
+# sets `project_warnings` uncomment the options to enable them:
 # cmake-format: off
 dynamic_project_options(
-  PREFIX ${PROJECT_NAME}
   # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
   # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
   # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
 )
 # cmake-format: on
-target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # ---- Add source files ----
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
-# automatically. Keep that in mind when changing files, or explicitly mention them here.
-# XXX file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
-# XXX file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+# automatically. Keep that in mind when changing files, or explicitly mention them here. XXX
+# file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h") XXX
+# file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
 set(_headers source/greeter.cpp)
 set(_sources include/greeter/greeter.h)
 
@@ -83,57 +95,44 @@ set(_sources include/greeter/greeter.h)
 add_library(${PROJECT_NAME} ${_headers} ${_sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_${CMAKE_CXX_STANDARD})
+set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${OPTION_ENABLE_UNITY})
+
 # being a cross-platform target, we enforce standards conformance on MSVC
-target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17) # mimimum requierd for package user
+target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd for package user
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
-target_disable_clang_tidy(fmt)
 
-# target_include_directories with the SYSTEM modifier will request the compiler
-# to omit warnings from the provided paths, if the compiler supports that
+# target_include_directories with the SYSTEM modifier will request the compiler to omit warnings
+# from the provided paths, if the compiler supports that
 target_include_directories(
   ${PROJECT_NAME} SYSTEM PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-if(CMAKE_SKIP_INSTALL_RULES)
-  # FIXME: should be PRIVATE! CK
-  target_link_libraries(
-    ${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_project_warnings ${PROJECT_NAME}_project_options
-  )
+if(CMAKE_SKIP_INSTALL_RULES OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+  target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
   return()
 endif()
 
 # ---- Create an installable target ----
 # this allows users to install and find the library via `find_package()`.
 
-# Add other targets that you want installe here. Or be default we just package
-# all targets recursively found for the current folder if not specified.
-package_project(
-  NAME ${PROJECT_NAME}
-  TARGETS ${PROJECT_NAME} # XXX project_options project_warnings
-  PUBLIC_INCLUDES ${PROJECT_SOURCE_DIR}/include
-  PUBLIC_DEPENDENCIES_CONFIGURED "fmt 8.1.1"
-  # FIXME: NO! PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
-)
-
 # the location where the project's version header will be placed should match the project's regular
 # header paths
-# string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
+string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
 
-# packageProject(
-#   NAME ${PROJECT_NAME}
-#   VERSION ${PROJECT_VERSION}
-#   NAMESPACE ${PROJECT_NAME}
-#   BINARY_DIR ${PROJECT_BINARY_DIR}
-#   INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
-#   INCLUDE_DESTINATION include/${PROJECT_NAME}
-#   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
-#   DISABLE_VERSION_SUFFIX YES
-#   COMPATIBILITY SameMajorVersion
-#   DEPENDENCIES "fmt 8.1.1"
-# )
+packageProject(
+  NAME ${PROJECT_NAME}
+  VERSION ${PROJECT_VERSION} NAMESPACE ${PROJECT_NAME}
+  BINARY_DIR ${PROJECT_BINARY_DIR}
+  INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
+  INCLUDE_DESTINATION include/${PROJECT_NAME}
+  VERSION_HEADER ${VERSION_HEADER_LOCATION} DISABLE_VERSION_SUFFIX YES
+  COMPATIBILITY SameMajorVersion
+  DEPENDENCIES "fmt 9.1.0"
+)
 
 include(CPack)
