@@ -45,16 +45,16 @@ include(cmake/options.cmake)
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
-# NOTE: The fmt library must be installed if not found! BUT ether clang-tidy checks nor compiler
+# NOTE: The fmt library must be installed if not found! BUT either clang-tidy checks nor compiler
 # warnings are wanted!
 
-# FIXME: EXCLUDE_FROM_ALL must be off or fmt will not be installed! CK
+# FIXME: EXCLUDE_FROM_ALL must be OFF or fmt target will NOT be installed! CK
 option(FMT_INSTALL "create an installable target" YES)
 CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
   GITHUB_REPOSITORY fmtlib/fmt
-  EXCLUDE_FROM_ALL NO
+  EXCLUDE_FROM_ALL YES
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
 )
