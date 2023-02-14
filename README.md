@@ -43,7 +43,7 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 
 ### Important note
 
-**To cleanly separate the library and subproject code, the outer
+**To cleanly separate the library and subprojects code, the outer
 [CMakeLists.txt](CMakeLists.txt) only defines the library itself while the
 tests and other subprojects are self-contained in their own directories.**
 
@@ -130,10 +130,10 @@ stagedir
 see [./CMakeLists.txt](./CMakeLists.txt)
 and [./CMakePresets.json](./CMakePresets.json)
 
-**This `CMakeList.txt` project file is intended to be used as a subproject with `CPMAddPackage()` only!**
+**This `CMakeList.txt` project file is intended to be used as a subproject with
+`CPMAddPackage()` only!**
 
-Use the following commands to install the **Release** library and test the
-installed CMake export config package:
+Use the following command to install the **Release** library without test:
 
 ```bash
 make install
@@ -142,6 +142,20 @@ make install
 # cmake --workflow --preset default --fresh
 
 # the build/user is the CMake binary tree
+```
+
+The installed CMake export config package is:
+
+```bash
+tree stagedir/lib/cmake/greeter
+
+stagedir/lib/cmake/greeter
+├── greeterConfig.cmake
+├── greeterConfigVersion.cmake
+├── greeterTargets-release.cmake
+└── greeterTargets.cmake
+
+0 directories, 4 files
 ```
 
 ### Build, test, and install the standalone Release targets and its dependencies
@@ -180,7 +194,7 @@ cd test && cmake --workflow --preset=default
 see [all/CMakeLists.txt](all/CMakeLists.txt)
 and [all/CMakePresets.json](all/CMakePresets.json)
 
-Use the following commands to run the **Debug** test suite at once:
+Use the following command to run the **Debug** test suite at once:
 
 ```bash
 make gcov
@@ -197,7 +211,7 @@ make gcov
 
 ### Run clang-format
 
-Use the following commands from the project's root directory to check and fix
+Use the following command from the project's root directory to check and fix
 C++ and CMake source style.  This requires _clang-format_, _cmake-format_ and
 _pyyaml_ to be installed on the current system.
 
@@ -223,7 +237,7 @@ pip3 install -r requirements.txt
 
 see [documentation/CMakeLists.txt](documentation/CMakeLists.txt)
 
-To manually build documentation, call the following command.
+To manually build documentation, call the following commands.
 
 ```bash
 cmake -S documentation -B build/doc
