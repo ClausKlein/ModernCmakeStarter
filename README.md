@@ -51,20 +51,25 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 
 **To cleanly separate the library and subproject code, the outer [CMakeLists.txt](CMakeLists.txt) only defines the library
 itself while the tests and other subprojects are self-contained in their own directories.**
+
 During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
+
+A GNUmakefile encapsulates the most common tasks. Where this is not feasible the underlying cmake commands are shown as an alternative.
 
 ### Build, install, and test the Release library
 
 see [./CMakeLists.txt](./CMakeLists.txt)
 and [./CMakePresets.json](./CMakePresets.json)
 
-Use the following commands to install the **Release** libray and test the installed CMake export config package:
+Use the following commands to install the **Release** library and test the installed CMake export config package:
 
 ```bash
-# make test_install -n
-cmake --workflow --preset default --fresh
-cd test && cmake --workflow --preset default --fresh
-cd standalone && cmake --workflow --preset default --fresh
+make test_install
+
+## This is equivalent to call:
+# cmake --workflow --preset default --fresh
+# cd test && cmake --workflow --preset default --fresh
+# cd standalone && cmake --workflow --preset default --fresh
 ```
 
 ### Build, test, and install the standalone Release targets and its dependencies
@@ -76,13 +81,14 @@ Use the following command to build, test, and install the **Release** executable
 
 ```bash
 cd standalone && cmake --workflow --preset=default
-# or
-cmake -S standalone -B build/standalone
-cmake --build build/standalone
-./build/standalone/Greeter --help
+
+## This is equivalent to call:
+# cmake -S standalone -B build/standalone
+# cmake --build build/standalone
+# ./build/standalone/Greeter --help
 ```
 
-### Build and test the installed Release version of the libray
+### Build and test the installed Release version of the library
 
 see [test/CMakeLists.txt](test/CMakeLists.txt)
 and [test/CMakePresets.json](test/CMakePresets.json)
@@ -101,13 +107,15 @@ and [all/CMakePresets.json](all/CMakePresets.json)
 Use the following commands to run the **Debug** test suite at once:
 
 ```bash
-# make gcov -n
-cd all && cmake --preset default
-cmake --build build/all --target all
-cmake --build build/all --target test
-gcovr build/all
+make gcov
 
-# to direct call the executable use:
+## This is equivalent to call:
+# cd all && cmake --preset default
+# cmake --build build/all --target all
+# cmake --build build/all --target test
+# gcovr build/all
+
+# to directly call the executable use:
 ./build/test/GreeterTestsD
 ```
 
@@ -117,11 +125,13 @@ Use the following commands from the project's root directory to check and fix C+
 This requires _clang-format_, _cmake-format_ and _pyyaml_ to be installed on the current system.
 
 ```bash
-# make format -n
-cd all && cmake --preset default
-cmake --build build/all --target format
+make format
+
+## This is equivalent to call:
+# cd all && cmake --preset default
+# cmake --build build/all --target format
 # or
-cmake --build build/all --target check-format
+# cmake --build build/all --target check-format
 ```
 
 See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
@@ -148,7 +158,7 @@ To build the documentation locally, you will need Doxygen, jinja2 and Pygments i
 
 ## Build everything at once
 
-**Note: This workflow is for Developers only and their targest must not installed!**
+**Note: This workflow is for developers only and their target must not be installed!**
 
 The project also includes an `all` directory that allows building all Debug targets at the same time.
 This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.
@@ -159,10 +169,12 @@ cd all && cmake --workflow --preset=default
 cmake --build build/all --target GenerateDocs
 
 # to run-clang-tidy on all sources:
-# make check -n
-cd all && cmake --preset default
-perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e "s#-I($CPM_SOURCE_CACHE)#-isystem \$1#g;" build/all/compile_commands.json
-run-clang-tidy -p build/all */source
+make check
+
+## This is equivalent to call:
+# cd all && cmake --preset default
+# perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e "s#-I($CPM_SOURCE_CACHE)#-isystem \$1#g;" build/all/compile_commands.json
+# run-clang-tidy -p build/all */source
 ```
 
 ### Additional tools
