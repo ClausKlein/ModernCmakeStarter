@@ -41,10 +41,10 @@ include(cmake/options.cmake)
 
 # ---- Add dependencies via CPM ----
 
-# PackageProject.cmake will be used to make our target installable XXX
-# CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
+# PackageProject.cmake will be used to make our target installable
+CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
-# XXX option(FMT_INSTALL "create an installable target" YES)
+option(FMT_INSTALL "create an installable target" YES)
 CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
@@ -52,7 +52,6 @@ CPMAddPackage(
   EXCLUDE_FROM_ALL YES
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
-  OPTIONS "FMT_INSTALL YES" # create an installable target
 )
 if(fmt_SOURCE_DIR) # TODO AND NOT TARGET fmt::fmt)
   # TODO add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)
@@ -116,18 +115,19 @@ endif()
 # ---- Create an installable target ----
 # this allows users to install and find the library via `find_package()`.
 
-# Add other targets that you want installe here. Or be default we just package all targets
-# recursively found for the current folder if not specified.
-package_project(
-  NAME
-  ${PROJECT_NAME}
-  TARGETS
-  ${PROJECT_NAME}
-  PUBLIC_INCLUDES
-  ${PROJECT_SOURCE_DIR}/include
-  PUBLIC_DEPENDENCIES_CONFIGURED
-  "fmt 9.1.0"
-  # NOTE(CK): NO! XXX PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
+# the location where the project's version header will be placed should match the project's regular
+# header paths
+string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
+
+packageProject(
+  NAME ${PROJECT_NAME}
+  VERSION ${PROJECT_VERSION} NAMESPACE ${PROJECT_NAME}
+  BINARY_DIR ${PROJECT_BINARY_DIR}
+  INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
+  INCLUDE_DESTINATION include/${PROJECT_NAME}
+  VERSION_HEADER ${VERSION_HEADER_LOCATION} DISABLE_VERSION_SUFFIX YES
+  COMPATIBILITY SameMajorVersion
+  DEPENDENCIES "fmt 9.1.0"
 )
 
 include(CPack)

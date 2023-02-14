@@ -17,7 +17,7 @@ include(../cmake/options.cmake)
 
 CPMAddPackage(
   GITHUB_REPOSITORY jarro2783/cxxopts
-  VERSION 3.0.0
+  VERSION 3.1.0
   EXCLUDE_FROM_ALL YES
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25

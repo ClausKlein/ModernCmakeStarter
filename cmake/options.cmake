@@ -45,7 +45,7 @@ macro(target_disable_clang_tidy TARGET)
   endif()
 endmacro()
 
-macro(get_system_property DIRECTORY)
+macro(check_system_property DIRECTORY)
   get_property(
     _value
     DIRECTORY ${DIRECTORY}
@@ -59,6 +59,6 @@ endmacro()
 
 macro(set_system_property DIRECTORY)
   message(TRACE "${DIRECTORY}")
-  # XXX set_property(DIRECTORY ${DIRECTORY} PROPERTY SYSTEM ON)
-  get_system_property(${DIRECTORY})
+  set_property(DIRECTORY ${DIRECTORY} PROPERTY SYSTEM ON)
+  check_system_property(${DIRECTORY})
 endmacro()

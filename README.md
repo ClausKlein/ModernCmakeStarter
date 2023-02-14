@@ -49,22 +49,25 @@ Alternatively you may use the [flexible project options](https://github.com/amin
 
 ### Important note
 
-**To cleanly separate the library and subproject code, the outer [CMakeLists.txt](CMakeLists.txt) only defines the library
-itself while the tests and other subprojects are self-contained in their own directories.**
-During development it is usually convenient to [build all subprojects at once](#build-everything-at-once).
+**To cleanly separate the library and subproject code, the outer
+[CMakeLists.txt](CMakeLists.txt) only defines the library itself while the
+tests and other subprojects are self-contained in their own directories.**
+During development it is usually convenient to [build all subprojects at
+once](#build-everything-at-once).
 
 ### Build, install, and test the Release library
 
 see [./CMakeLists.txt](./CMakeLists.txt)
 and [./CMakePresets.json](./CMakePresets.json)
 
-Use the following commands to install the **Release** libray and test the installed CMake export config package:
+Use the following commands to install the **Release** libray and test the
+installed CMake export config package:
 
 ```bash
-# make test_install -n
-cmake --workflow --preset default --fresh
-cd test && cmake --workflow --preset default --fresh
-cd standalone && cmake --workflow --preset default --fresh
+make test_install
+# cmake --workflow --preset default --fresh
+# cd test && cmake --workflow --preset default --fresh
+# cd standalone && cmake --workflow --preset default --fresh
 ```
 
 ### Build, test, and install the standalone Release targets and its dependencies
@@ -72,14 +75,17 @@ cd standalone && cmake --workflow --preset default --fresh
 see [standalone/CMakeLists.txt](standalone/CMakeLists.txt)
 and [standalone/CMakePresets.json](standalone/CMakePresets.json)
 
-Use the following command to build, test, and install the **Release** executable target:
+Use the following command to build, test, and install the **Release**
+executable target:
 
 ```bash
-cd standalone && cmake --workflow --preset=default
-# or
-cmake -S standalone -B build/standalone
-cmake --build build/standalone
-./build/standalone/Greeter --help
+make standalone
+# cmake --workflow --preset default --fresh
+# cd test && cmake --workflow --preset default --fresh
+# cd standalone && cmake --workflow --preset default --fresh
+
+# to direct call the executable use:
+./build/standalone/greeter --help
 ```
 
 ### Build and test the installed Release version of the libray
@@ -101,11 +107,11 @@ and [all/CMakePresets.json](all/CMakePresets.json)
 Use the following commands to run the **Debug** test suite at once:
 
 ```bash
-# make gcov -n
-cd all && cmake --preset default
-cmake --build build/all --target all
-cmake --build build/all --target test
-gcovr build/all
+make gcov
+# cd all && cmake --preset default
+# cmake --build build/all --target all
+# cmake --build build/all --target test
+# gcovr build/all
 
 # to direct call the executable use:
 ./build/test/GreeterTestsD
@@ -113,15 +119,16 @@ gcovr build/all
 
 ### Run clang-format
 
-Use the following commands from the project's root directory to check and fix C++ and CMake source style.
-This requires _clang-format_, _cmake-format_ and _pyyaml_ to be installed on the current system.
+Use the following commands from the project's root directory to check and fix
+C++ and CMake source style.  This requires _clang-format_, _cmake-format_ and
+_pyyaml_ to be installed on the current system.
 
 ```bash
-# make format -n
-cd all && cmake --preset default
-cmake --build build/all --target format
-# or
-cmake --build build/all --target check-format
+make format
+# cd all && cmake --preset default
+# cmake --build build/all --target format
+### or
+# cmake --build build/all --target check-format
 ```
 
 See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
@@ -140,45 +147,52 @@ To manually build documentation, call the following command.
 ```bash
 cmake -S documentation -B build/doc
 cmake --build build/doc --target GenerateDocs
+
 # view the docs
 open build/doc/doxygen/html/index.html
 ```
 
-To build the documentation locally, you will need Doxygen, jinja2 and Pygments installed on your system.
+To build the documentation locally, you will need _Doxygen_, jinja2 and Pygments
+installed on your system.
 
 ## Build everything at once
 
 **Note: This workflow is for Developers only and their targest must not installed!**
 
-The project also includes an `all` directory that allows building all Debug targets at the same time.
-This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.
+The project also includes an `all` directory that allows building all **Debug**
+targets at the same time.  This is useful during development, as it exposes all
+subprojects to your IDE and avoids redundant builds of the library.
 
 ```bash
-cd all && cmake --workflow --preset=default
-# build docs
-cmake --build build/all --target GenerateDocs
+make all
+# cd all && cmake --workflow --preset=default
 
 # to run-clang-tidy on all sources:
-# make check -n
-cd all && cmake --preset default
-perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' -e "s#-I($CPM_SOURCE_CACHE)#-isystem \$1#g;" build/all/compile_commands.json
-run-clang-tidy -p build/all */source
+make check
+# cd all && cmake --preset default
+# run-clang-tidy -p build/all source */source
+
+# too you generate the documentation
+cmake --build build/all --target GenerateDocs
 ```
 
 ### Additional tools
 
-The test and standalone subprojects include the [tools.cmake](cmake/tools.cmake) file which is used to import additional tools on-demand through CMake configuration arguments.
-The following are currently supported.
+The all subprojects include additional tools on-demand through CMake configuration presets.
 
 #### Sanitizers
 
-Sanitizers can be enabled by configuring CMake with `-DUSE_SANITIZER=<Address | Memory | MemoryWithOrigins | Undefined | Thread | Leak | 'Address;Undefined'>`.
+Sanitizers can be enabled by configuring with 
+
+```bash
+cd all && ccmake . 
+```
 
 #### Static Analyzers
 
-Static Analyzers can be enabled by setting `-DUSE_STATIC_ANALYZER=<clang-tidy | iwyu | cppcheck>`, or a combination of those in quotation marks, separated by semicolons.
+Static Analyzers are enabled by default for Developers at the all subdirectory
+
 By default, analyzers will automatically find configuration files such as `.clang-format`.
-Additional arguments can be passed to the analyzers by setting the `CLANG_TIDY_ARGS`, `IWYU_ARGS` or `CPPCHECK_ARGS` variables.
 
 #### Ccache
 

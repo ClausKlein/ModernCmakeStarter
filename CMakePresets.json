@@ -29,7 +29,7 @@
       },
       "warnings": {
         "deprecated": true,
-        "uninitialized": true
+        "uninitialized": false
       }
     },
     {
