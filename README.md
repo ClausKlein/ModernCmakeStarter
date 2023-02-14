@@ -53,7 +53,7 @@ once](#build-everything-at-once).
 A [./GNUmakefile](./GNUmakefile) encapsulates the most common tasks. Where this
 is not feasible the underlying CMake commands are shown as an alternative.
 
-#### This project lifes on this directory tree:
+#### This project lives on this directory tree:
 
 ```bash
 tree -d -L 3
@@ -125,21 +125,23 @@ stagedir
 44 directories
 ```
 
-### Build, install, and test the Release library
+### Build and install the Release library and its dependencies only
 
 see [./CMakeLists.txt](./CMakeLists.txt)
 and [./CMakePresets.json](./CMakePresets.json)
+
+**This `CMakeList.txt` project file is intended to be used as a subproject with `CPMAddPackage()` only!**
 
 Use the following commands to install the **Release** library and test the
 installed CMake export config package:
 
 ```bash
-make test_install
+make install
 
 ## This is equivalent to call:
 # cmake --workflow --preset default --fresh
-# cd test && cmake --workflow --preset default --fresh
-# cd standalone && cmake --workflow --preset default --fresh
+
+# the build/user is the CMake binary tree
 ```
 
 ### Build, test, and install the standalone Release targets and its dependencies
@@ -264,7 +266,8 @@ The all subprojects include additional tools on-demand through CMake configurati
 Sanitizers can be enabled by configuring with 
 
 ```bash
-cd all && ccmake . 
+make setup
+cd build/all && ccmake .
 ```
 
 #### Static Analyzers
