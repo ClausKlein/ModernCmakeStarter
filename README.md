@@ -12,7 +12,7 @@
 # ModernCmakeStarter
 
 Setting up a new C++ project usually requires a significant amount of preparation and boilerplate code, even more so for modern C++ projects with tests, executables and continuous integration.
-This template is the result of learnings from many previous projects and should help reduce the work required to setup up a modern C++ project.
+This project is the result of learnings from many previous projects and should help reduce the work required to setup up a modern C++ project.
 
 ## Features
 
@@ -28,22 +28,16 @@ This template is the result of learnings from many previous projects and should 
 - Installable target with automatic versioning information and header generation via [PackageProject.cmake](https://github.com/TheLartians/PackageProject.cmake)
 - Automatic [documentation](https://thelartians.github.io/ModernCppStarter) and deployment with [Doxygen](https://www.doxygen.nl) and [GitHub Pages](https://pages.github.com)
 - Configurable support for [sanitizer tools, and more](#additional-tools)
-
+- [CMake presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html)
+- Supports [CMake Workflow Presets](https://cmake.org/cmake/help/v3.25/manual/cmake-presets.7.html#id10)
 
 ### New Features added
 
-Alternatively you may use the [flexible project options](https://github.com/aminya/project_options#readme). It provides different cmake functions such:
+Alternatively you may use the [flexible project options](https://github.com/aminya/project_options#readme). It provides different CMake functions such:
 
 - `project_options()`
 - `dynamic_project_options()`
-- [`package_project()`](https://github.com/aminya/project_options#package_project-function)
-- `run_vcpkg()`
-- `target_link_system_libraries()`
-- and [conan](https://docs.conan.io/en/latest/) for dependency management.
-- [CMake presets](https://cmake.org/cmake/help/latest/manual/cmake-presets.7.html)
 - [Build a project with presets](https://cmake.org/cmake/help/latest/manual/cmake.1.html#build-a-project)
-
-- Supports [CMake Workflow Presets](https://cmake.org/cmake/help/v3.25/manual/cmake-presets.7.html#id10)
 
 ## Usage
 
@@ -56,8 +50,80 @@ tests and other subprojects are self-contained in their own directories.**
 During development it is usually convenient to [build all subprojects at
 once](#build-everything-at-once).
 
-A GNUmakefile encapsulates the most common tasks. Where this is not feasible
-the underlying cmake commands are shown as an alternative.
+A [./GNUmakefile](./GNUmakefile) encapsulates the most common tasks. Where this
+is not feasible the underlying CMake commands are shown as an alternative.
+
+#### This project lifes on this directory tree:
+
+```bash
+tree -d -L 3
+.
+├── all
+├── cmake
+├── documentation
+│   └── pages
+├── include
+│   └── greeter
+├── source
+├── standalone
+│   └── source
+└── test
+    └── source
+
+11 directories
+```
+
+#### The CMake workflows presets creates this directory tree:
+
+```bash
+tree -d -L 2 build stagedir
+build
+├── all
+│   ├── CMakeFiles
+│   ├── CPM_modules
+│   ├── Testing
+│   ├── _deps
+│   ├── bin
+│   ├── documentation
+│   ├── standalone
+│   └── test
+├── doc
+│   ├── CMakeFiles
+│   ├── CPM_modules
+│   ├── __pycache__
+│   ├── _deps
+│   └── doxygen
+├── standalone
+│   ├── CMakeFiles
+│   ├── CPM_modules
+│   ├── Testing
+│   ├── _CPack_Packages
+│   ├── _deps
+│   └── bin
+├── test
+│   ├── CMakeFiles
+│   ├── CPM_modules
+│   ├── Testing
+│   ├── _deps
+│   └── bin
+└── user
+    ├── CMakeFiles
+    ├── CPM_modules
+    ├── PackageProjectInclude
+    ├── _CPack_Packages
+    └── _deps
+stagedir
+├── bin
+├── include
+│   ├── fmt
+│   └── greeter
+└── lib
+    ├── cmake
+    ├── greeter
+    └── pkgconfig
+
+44 directories
+```
 
 ### Build, install, and test the Release library
 
@@ -216,7 +282,7 @@ Ccache is enabled as long it is found.
 > Can I use this for header-only libraries?
 
 Yes, however you will need to change the library type to an `INTERFACE` library as documented in the [CMakeLists.txt](CMakeLists.txt).
-See [here](https://github.com/TheLartians/StaticTypeInfo) for an example header-only library based on the template.
+See [here](https://github.com/TheLartians/StaticTypeInfo) for an example header-only library project.
 
 > I don't need a standalone target / documentation. How can I get rid of it?
 
@@ -224,9 +290,9 @@ Simply remove the standalone / documentation directory and according github work
 
 > Can I build the standalone and tests at the same time? / How can I tell my IDE about all subprojects?
 
-To keep the template modular, all subprojects derived from the library have been separated into their own CMake modules.
+To keep the project modular, all subprojects derived from the library have been separated into their own CMake modules.
 This approach makes it trivial for third-party projects to re-use the projects library code.
-To allow IDEs to see the full scope of the project, the template includes the `all` directory that will create a single build for all subprojects.
+To allow IDEs to see the full scope of the project, the project includes the `all` directory that will create a single build for all subprojects.
 Use this as the main directory for best IDE support.
 
 > I see you are using `GLOB` to add source files in CMakeLists.txt. Isn't that evil?
@@ -255,7 +321,7 @@ This will enable shallow clones and allow offline configurations dependencies ar
 
 > Can I use CPack to create a package installer for my project?
 
-As there are a lot of possible options and configurations, this is not (yet) in the scope of this template. See the [CPack documentation](https://cmake.org/cmake/help/latest/module/CPack.html) for more information on setting up CPack installers.
+As there are a lot of possible options and configurations, this is not (yet) in the scope of this project. See the [CPack documentation](https://cmake.org/cmake/help/latest/module/CPack.html) for more information on setting up CPack installers.
 
 > This is too much, I just want to play with C++ code and test some libraries.
 
