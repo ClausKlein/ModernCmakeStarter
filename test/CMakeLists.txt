@@ -30,7 +30,7 @@ if(doctest_SOURCE_DIR) # TODO AND NOT TARGET doctest)
   # TODO add_subdirectory(${doctest_SOURCE_DIR} doctest::doctest SYSTEM EXCLUDE_FROM_ALL)
   message(TRACE "add_subdirectory(${doctest_SOURCE_DIR} doctest SYSTEM EXCLUDE_FROM_ALL)")
   target_disable_clang_tidy(doctest)
-  set_system_property(${doctest_SOURCE_DIR})
+  check_system_property(${doctest_SOURCE_DIR})
 endif()
 
 if(TEST_INSTALLED_VERSION) # TODO(CK): or if(PROJECT_IS_TOP_LEVEL)

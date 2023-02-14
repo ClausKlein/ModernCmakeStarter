@@ -15,19 +15,20 @@ include(../cmake/options.cmake)
 
 # ---- Dependencies ----
 
+# FIXME: EXCLUDE_FROM_ALL must be off or fmt will not be installed! CK
 CPMAddPackage(
   GITHUB_REPOSITORY jarro2783/cxxopts
   VERSION 3.1.0
-  EXCLUDE_FROM_ALL YES
+  EXCLUDE_FROM_ALL NO
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 )
 if(cxxopts_SOURCE_DIR) # TODO AND NOT TARGET cxxopts)
-  # TODO add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts::cxxopts SYSTEM EXCLUDE_FROM_ALL)
-  message(TRACE "add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts SYSTEM EXCLUDE_FROM_ALL)")
+  # TODO add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts::cxxopts SYSTEM)
+  message(TRACE "add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts SYSTEM)")
   target_disable_clang_tidy(cxxopts)
-  set_system_property(${cxxopts_SOURCE_DIR})
+  check_system_property(${cxxopts_SOURCE_DIR})
 endif()
 
 CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)

@@ -34,11 +34,12 @@ check: setup
 	run-clang-tidy -extra-arg=-Wno-unknown-warning-option -p $(BUILD_DIR)/all source */source
 
 setup:
-	cd all && cmake --preset default --log-level=TRACE # XXX --trace-expand --trace-source=CPM.cmake
+	cd all && cmake --preset default --log-level=TRACE #XXX --trace-expand --trace-source=CPM.cmake
 #XXX	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' \
 #XXX	-e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $(BUILD_DIR)/all/compile_commands.json
 
 ################################
+# Begin Release workflows
 
 install:
 	cmake --workflow --preset default --fresh
@@ -49,6 +50,7 @@ test_install: install
 standalone: test_install
 	cd standalone && cmake --workflow --preset default --fresh
 
+# End Release workflows
 ################################
 
 documentation:

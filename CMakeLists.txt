@@ -32,6 +32,7 @@ include(GNUInstallDirs)
 # ---- local Options ----
 
 if(NOT PROJECT_IS_TOP_LEVEL)
+  message(WARNING "set(CMAKE_SKIP_INSTALL_RULES YES)")
   option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" YES)
 endif()
 
@@ -44,20 +45,24 @@ include(cmake/options.cmake)
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
+# NOTE: The fmt library must be installed if not found! BUT ether clang-tidy checks nor compiler
+# warnings are wanted!
+
+# FIXME: EXCLUDE_FROM_ALL must be off or fmt will not be installed! CK
 option(FMT_INSTALL "create an installable target" YES)
 CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
   GITHUB_REPOSITORY fmtlib/fmt
-  EXCLUDE_FROM_ALL YES
+  EXCLUDE_FROM_ALL NO
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
 )
 if(fmt_SOURCE_DIR) # TODO AND NOT TARGET fmt::fmt)
-  # TODO add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)
-  message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)")
+  # TODO add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)
+  message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)")
   target_disable_clang_tidy(fmt)
-  set_system_property(${fmt_SOURCE_DIR})
+  check_system_property(${fmt_SOURCE_DIR})
 endif()
 
 # ---- Setup default project_options ----
