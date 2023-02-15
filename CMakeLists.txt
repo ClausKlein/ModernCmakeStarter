@@ -54,7 +54,7 @@ CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
   GITHUB_REPOSITORY fmtlib/fmt
-  EXCLUDE_FROM_ALL YES
+  EXCLUDE_FROM_ALL NO
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
 )
