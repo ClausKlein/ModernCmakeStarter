@@ -7,6 +7,8 @@ if(PROJECT_IS_TOP_LEVEL AND CMAKE_BUILD_TYPE STREQUAL "Release")
       NO
       CACHE BOOL "Forced generation of installation rules" FORCE
   )
+else()
+  message(WARNING "set(CMAKE_SKIP_INSTALL_RULES YES)")
 endif()
 
 # --- Import project options ----
@@ -15,11 +17,11 @@ include(../cmake/options.cmake)
 
 # ---- Dependencies ----
 
-# FIXME: EXCLUDE_FROM_ALL must be off or fmt will not be installed! CK
+# NOTE: EXCLUDE_FROM_ALL must be off or cxxopts target will NOT be installed! CK
 CPMAddPackage(
   GITHUB_REPOSITORY jarro2783/cxxopts
   VERSION 3.1.0
-  EXCLUDE_FROM_ALL NO
+  EXCLUDE_FROM_ALL YES
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
