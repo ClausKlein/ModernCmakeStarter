@@ -22,13 +22,13 @@ CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 CPMAddPackage(
   GITHUB_REPOSITORY "doctest/doctest"
   VERSION "2.4.9"
-  EXCLUDE_FROM_ALL YES
+  EXCLUDE_FROM_ALL NO
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
 )
 if(doctest_SOURCE_DIR) # TODO AND NOT TARGET doctest)
-  # TODO add_subdirectory(${doctest_SOURCE_DIR} doctest::doctest SYSTEM EXCLUDE_FROM_ALL)
-  message(TRACE "add_subdirectory(${doctest_SOURCE_DIR} doctest SYSTEM EXCLUDE_FROM_ALL)")
+  # TODO add_subdirectory(${doctest_SOURCE_DIR} doctest::doctest SYSTEM)
+  message(TRACE "add_subdirectory(${doctest_SOURCE_DIR} doctest SYSTEM)")
   target_disable_clang_tidy(doctest)
   check_system_property(${doctest_SOURCE_DIR})
 endif()
@@ -42,10 +42,10 @@ endif()
 
 # ---- Create binary ----
 
-# XXX file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
-set(sources source/main.cpp source/greeter.cpp)
+# XXX file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+set(_sources source/main.cpp source/greeter.cpp)
 
-add_executable(${PROJECT_NAME} ${sources})
+add_executable(${PROJECT_NAME} ${_sources})
 target_link_libraries(${PROJECT_NAME} doctest::doctest greeter::greeter)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 

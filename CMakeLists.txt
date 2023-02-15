@@ -48,13 +48,13 @@ CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 # NOTE: The fmt library must be installed if not found! BUT either clang-tidy checks nor compiler
 # warnings are wanted!
 
-# FIXME: EXCLUDE_FROM_ALL must be OFF or fmt target will NOT be installed! CK
+# NOTE: EXCLUDE_FROM_ALL must be OFF or fmt target will NOT be installed! CK
 option(FMT_INSTALL "create an installable target" YES)
 CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
   GITHUB_REPOSITORY fmtlib/fmt
-  EXCLUDE_FROM_ALL YES
+  EXCLUDE_FROM_ALL NO
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
 )
@@ -82,11 +82,12 @@ target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 # ---- Add source files ----
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
-# automatically. Keep that in mind when changing files, or explicitly mention them here. XXX
-# file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h") XXX
-# file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
-set(_headers source/greeter.cpp)
-set(_sources include/greeter/greeter.h)
+# automatically. Keep that in mind when changing files, or explicitly mention them here.
+
+# XXX # file(GLOB_RECURSE _headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+set(_headers include/greeter/greeter.h)
+# XXX file(GLOB_RECURSE _sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+set(_sources source/greeter.cpp)
 
 # ---- Create library ----
 
