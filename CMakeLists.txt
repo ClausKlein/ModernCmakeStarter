@@ -45,22 +45,22 @@ include(cmake/options.cmake)
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
-# NOTE: The fmt library must be installed if not found! BUT either clang-tidy checks nor compiler
+# NOTE: The fmt library has to be installed if not found! BUT either clang-tidy checks nor compiler
 # warnings are wanted!
 
-# NOTE: EXCLUDE_FROM_ALL must be OFF or fmt target will NOT be installed! CK
-option(FMT_INSTALL "create an installable target" YES)
+# FIXME: EXCLUDE_FROM_ALL must be OFF or fmt target will NOT be installed! CK
+option(FMT_INSTALL "create an installable target" NO)
 CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
   GITHUB_REPOSITORY fmtlib/fmt
-  EXCLUDE_FROM_ALL NO
+  EXCLUDE_FROM_ALL YES
   # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
 )
 if(fmt_SOURCE_DIR) # TODO AND NOT TARGET fmt::fmt)
   # TODO add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)
-  message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)")
+  message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)")
   target_disable_clang_tidy(fmt)
   check_system_property(${fmt_SOURCE_DIR})
 endif()
@@ -104,7 +104,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd for package user
 
 # Link dependencies
-target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only)
 
 # target_include_directories with the SYSTEM modifier will request the compiler to omit warnings
 # from the provided paths, if the compiler supports that
@@ -133,7 +133,7 @@ packageProject(
   INCLUDE_DESTINATION include/${PROJECT_NAME}
   VERSION_HEADER ${VERSION_HEADER_LOCATION} DISABLE_VERSION_SUFFIX YES
   COMPATIBILITY SameMajorVersion
-  DEPENDENCIES "fmt 9.1.0"
+  # XXX DEPENDENCIES "fmt 9.1.0"
 )
 
 include(CPack)
