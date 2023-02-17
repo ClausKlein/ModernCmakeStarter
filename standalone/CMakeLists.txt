@@ -18,6 +18,7 @@ include(../cmake/options.cmake)
 # ---- Dependencies ----
 
 # FIXME: EXCLUDE_FROM_ALL has to be OFF or cxxopts target may NOT be installed! CK
+CPMAddPackage(
   GITHUB_REPOSITORY jarro2783/cxxopts
   VERSION 3.1.0
   EXCLUDE_FROM_ALL NO

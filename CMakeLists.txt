@@ -104,7 +104,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd for package user
 
 # Link dependencies
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only)
+target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
 
 # target_include_directories with the SYSTEM modifier will request the compiler to omit warnings
 # from the provided paths, if the compiler supports that
@@ -113,8 +113,9 @@ target_include_directories(
                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:project_warnings project_options>)
+
 if(CMAKE_SKIP_INSTALL_RULES OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-  target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
   return()
 endif()
 
