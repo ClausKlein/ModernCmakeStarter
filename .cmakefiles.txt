@@ -1,7 +1,3 @@
-./stagedir/lib/cmake/greeter/greeterConfigVersion.cmake
-./stagedir/lib/cmake/greeter/greeterTargets.cmake
-./stagedir/lib/cmake/greeter/greeterTargets-release.cmake
-./stagedir/lib/cmake/greeter/greeterConfig.cmake
 ./documentation/CMakeLists.txt
 ./CMakeLists.txt
 ./test/CMakeLists.txt

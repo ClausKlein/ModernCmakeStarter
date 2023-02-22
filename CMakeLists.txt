@@ -1,7 +1,7 @@
 #
 # this project is for using as a sub project with add_subdirectory() or with CPMAddPackage()
 #
-cmake_minimum_required(VERSION 3.21...3.25)
+cmake_minimum_required(VERSION 3.21...3.26)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
 # the same version
@@ -48,21 +48,17 @@ CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 # NOTE: The fmt library has to be installed if not found! BUT either clang-tidy checks nor compiler
 # warnings are wanted!
 
-# FIXME: EXCLUDE_FROM_ALL must be OFF or fmt target will NOT be installed! CK
+# NOTE: EXCLUDE_FROM_ALL must be OFF or fmt target will NOT be installed! CK
 option(FMT_INSTALL "create an installable target" NO)
 CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
   GITHUB_REPOSITORY fmtlib/fmt
   EXCLUDE_FROM_ALL YES
-  # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
 )
-if(fmt_SOURCE_DIR) # TODO AND NOT TARGET fmt::fmt)
-  # TODO add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)
-  message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM EXCLUDE_FROM_ALL)")
+if(fmt_SOURCE_DIR)
   target_disable_clang_tidy(fmt)
-  check_system_property(${fmt_SOURCE_DIR})
 endif()
 
 # ---- Setup default project_options ----

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21...3.25)
+cmake_minimum_required(VERSION 3.21...3.26)
 
 project(GreeterStandalone LANGUAGES CXX)
 
@@ -17,20 +17,16 @@ include(../cmake/options.cmake)
 
 # ---- Dependencies ----
 
-# FIXME: EXCLUDE_FROM_ALL has to be OFF or cxxopts target may NOT be installed! CK
+# NOTE: EXCLUDE_FROM_ALL has to be OFF or cxxopts target may NOT be installed! CK
 CPMAddPackage(
   GITHUB_REPOSITORY jarro2783/cxxopts
   VERSION 3.1.0
   EXCLUDE_FROM_ALL NO
-  # TODO DOWNLOAD_ONLY YES
   SYSTEM YES # used in case of cmake v3.25
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 )
-if(cxxopts_SOURCE_DIR) # TODO AND NOT TARGET cxxopts)
-  # TODO add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts::cxxopts SYSTEM)
-  message(TRACE "add_subdirectory(${cxxopts_SOURCE_DIR} cxxopts SYSTEM)")
+if(cxxopts_SOURCE_DIR)
   target_disable_clang_tidy(cxxopts)
-  check_system_property(${cxxopts_SOURCE_DIR})
 endif()
 
 CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
