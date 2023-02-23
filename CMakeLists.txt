@@ -54,7 +54,7 @@ CPMAddPackage(
   NAME fmt
   GIT_TAG 9.1.0
   GITHUB_REPOSITORY fmtlib/fmt
-  EXCLUDE_FROM_ALL YES
+  EXCLUDE_FROM_ALL OFF
   SYSTEM YES # used in case of cmake v3.25
 )
 if(fmt_SOURCE_DIR)
@@ -101,6 +101,7 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd fo
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
+# FIXME: target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
 # target_include_directories with the SYSTEM modifier will request the compiler to omit warnings
 # from the provided paths, if the compiler supports that
@@ -109,9 +110,8 @@ target_include_directories(
                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:project_warnings project_options>)
-
 if(CMAKE_SKIP_INSTALL_RULES OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+  target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:project_warnings project_options>)
   return()
 endif()
 
@@ -130,7 +130,7 @@ packageProject(
   INCLUDE_DESTINATION include/${PROJECT_NAME}
   VERSION_HEADER ${VERSION_HEADER_LOCATION} DISABLE_VERSION_SUFFIX YES
   COMPATIBILITY SameMajorVersion
-  # XXX DEPENDENCIES "fmt 9.1.0"
+  # FIXME: DEPENDENCIES "fmt 9.1.0"
 )
 
 include(CPack)

@@ -21,7 +21,7 @@
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_DEBUG_POSTFIX": "D",
-        "CPM_USE_LOCAL_PACKAGES": "NO",
+        "CPM_USE_LOCAL_PACKAGES": "YES",
         "OPTION_ENABLE_UNITY": "NO",
         "OPTION_ENABLE_CLANG_TIDY": "YES",
         "BUILD_SHARED_LIBS": "YES",

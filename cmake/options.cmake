@@ -29,7 +29,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
 CPMAddPackage("gh:aminya/project_options@0.26.3")
 list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)
-include(StaticAnalyzers) # for target_disable_clang_tidy()
+include(StaticAnalyzers) # for target_disable_clang_tidy() and enable_clang_tidy()
 
 if(OPT_ENABLE_CLANG_TIDY)
   set(ProjectOptions_ENABLE_PCH OFF)
