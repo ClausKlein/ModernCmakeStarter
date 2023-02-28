@@ -32,7 +32,11 @@ if(TEST_INSTALLED_VERSION) # TODO(CK): or if(PROJECT_IS_TOP_LEVEL)
   find_package(greeter 1.1 REQUIRED)
   message(TRACE "Found at ${Greeter_DIR}")
 else()
-  CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+  CPMAddPackage(
+    NAME greeter
+    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
+    FORCE YES
+  )
 endif()
 
 # ---- Create binary ----

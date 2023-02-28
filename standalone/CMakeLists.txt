@@ -29,7 +29,11 @@ if(cxxopts_SOURCE_DIR)
   target_disable_clang_tidy(cxxopts)
 endif()
 
-CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+CPMAddPackage(
+  NAME greeter
+  SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
+  FORCE YES
+)
 
 # ---- Add source files ----
 
