@@ -21,10 +21,10 @@ CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 # XXX CPMAddPackage("gh:doctest/doctest@2.4.9")
 CPMAddPackage(
   GITHUB_REPOSITORY "doctest/doctest"
-  VERSION "2.4.9"
+  VERSION "2.4.11"
   SYSTEM YES # used in case of cmake v3.25
 )
-if(doctest_SOURCE_DIR)
+if(TARGET doctest)
   target_disable_clang_tidy(doctest)
 endif()
 
