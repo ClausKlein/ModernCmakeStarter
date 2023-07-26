@@ -2,7 +2,7 @@
 # This project enables the developer to build, test, install the project. It is strongly recommended
 # to test the exported cmake config package too!
 #
-cmake_minimum_required(VERSION 3.21...3.25)
+cmake_minimum_required(VERSION 3.21...3.26)
 
 project(GreeterTests LANGUAGES CXX)
 
@@ -21,23 +21,22 @@ CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 # XXX CPMAddPackage("gh:doctest/doctest@2.4.9")
 CPMAddPackage(
   GITHUB_REPOSITORY "doctest/doctest"
-  VERSION "2.4.9"
-  EXCLUDE_FROM_ALL NO
-  # TODO DOWNLOAD_ONLY YES
+  VERSION "2.4.11"
   SYSTEM YES # used in case of cmake v3.25
 )
-if(doctest_SOURCE_DIR) # TODO AND NOT TARGET doctest)
-  # TODO add_subdirectory(${doctest_SOURCE_DIR} doctest::doctest SYSTEM)
-  message(TRACE "add_subdirectory(${doctest_SOURCE_DIR} doctest SYSTEM)")
+if(TARGET doctest)
   target_disable_clang_tidy(doctest)
-  check_system_property(${doctest_SOURCE_DIR})
 endif()
 
 if(TEST_INSTALLED_VERSION) # TODO(CK): or if(PROJECT_IS_TOP_LEVEL)
   find_package(greeter 1.1 REQUIRED)
   message(TRACE "Found at ${Greeter_DIR}")
 else()
-  CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+  CPMAddPackage(
+    NAME greeter
+    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
+    FORCE YES
+  )
 endif()
 
 # ---- Create binary ----

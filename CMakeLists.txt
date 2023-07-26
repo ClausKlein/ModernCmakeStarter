@@ -1,7 +1,7 @@
 #
 # this project is for using as a sub project with add_subdirectory() or with CPMAddPackage()
 #
-cmake_minimum_required(VERSION 3.21...3.25)
+cmake_minimum_required(VERSION 3.21...3.26)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
 # the same version
@@ -45,24 +45,20 @@ include(cmake/options.cmake)
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.10.0")
 
-# NOTE: The fmt library must be installed if not found! BUT either clang-tidy checks nor compiler
+# NOTE: The fmt library has to be installed if not found! BUT either clang-tidy checks nor compiler
 # warnings are wanted!
 
 # NOTE: EXCLUDE_FROM_ALL must be OFF or fmt target will NOT be installed! CK
 option(FMT_INSTALL "create an installable target" YES)
 CPMAddPackage(
   NAME fmt
-  GIT_TAG 9.1.0
+  GIT_TAG 10.0.0
   GITHUB_REPOSITORY fmtlib/fmt
-  EXCLUDE_FROM_ALL NO
-  # TODO DOWNLOAD_ONLY YES
+  EXCLUDE_FROM_ALL OFF
   SYSTEM YES # used in case of cmake v3.25
 )
-if(fmt_SOURCE_DIR) # TODO AND NOT TARGET fmt::fmt)
-  # TODO add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)
-  message(TRACE "add_subdirectory(${fmt_SOURCE_DIR} fmt SYSTEM)")
+if(TARGET fmt)
   target_disable_clang_tidy(fmt)
-  check_system_property(${fmt_SOURCE_DIR})
 endif()
 
 # ---- Setup default project_options ----
@@ -104,7 +100,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd for package user
 
 # Link dependencies
-target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
+target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
+# TODO: target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 
 # target_include_directories with the SYSTEM modifier will request the compiler to omit warnings
 # from the provided paths, if the compiler supports that
@@ -114,7 +111,7 @@ target_include_directories(
 )
 
 if(CMAKE_SKIP_INSTALL_RULES OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-  target_link_libraries(${PROJECT_NAME} PUBLIC project_warnings project_options)
+  target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:project_warnings project_options>)
   return()
 endif()
 
@@ -133,7 +130,7 @@ packageProject(
   INCLUDE_DESTINATION include/${PROJECT_NAME}
   VERSION_HEADER ${VERSION_HEADER_LOCATION} DISABLE_VERSION_SUFFIX YES
   COMPATIBILITY SameMajorVersion
-  DEPENDENCIES "fmt 9.1.0"
+  # TODO: DEPENDENCIES "fmt 10.0.0"
 )
 
 include(CPack)

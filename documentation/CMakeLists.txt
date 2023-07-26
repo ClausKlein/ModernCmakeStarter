@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21...3.25)
+cmake_minimum_required(VERSION 3.21...3.26)
 
 project(GreeterDocs)
 
@@ -7,7 +7,11 @@ project(GreeterDocs)
 include(../cmake/options.cmake)
 
 CPMAddPackage("gh:mosra/m.css#a0d292ec311b97fefd21e93cdefb60f88d19ede6")
-CPMAddPackage(NAME greeter SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
+CPMAddPackage(
+  NAME greeter
+  SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..
+  FORCE YES
+)
 
 # ---- Doxygen variables ----
 

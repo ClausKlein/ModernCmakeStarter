@@ -1,5 +1,6 @@
+#include "greeter/greeter.h"
+
 #include <fmt/format.h>
-#include <greeter/greeter.h>
 
 using greeter::Greeter;
 
