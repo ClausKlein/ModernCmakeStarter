@@ -68,12 +68,14 @@ include(DynamicProjectOptions)
 # sets `project_warnings` uncomment the options to enable them:
 # cmake-format: off
 dynamic_project_options(
+  PREFIX ${PROJECT_NAME}
+  ENABLE_CACHE
   # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
   # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
   # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
 )
 # cmake-format: on
-target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # ---- Add source files ----
 
@@ -111,7 +113,10 @@ target_include_directories(
 )
 
 if(CMAKE_SKIP_INSTALL_RULES OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-  target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:project_warnings project_options>)
+  target_link_libraries(
+    ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_NAME}_project_warnings>
+                           $<BUILD_INTERFACE:${PROJECT_NAME}_project_options>
+  )
   return()
 endif()
 
@@ -124,11 +129,14 @@ string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
 
 packageProject(
   NAME ${PROJECT_NAME}
-  VERSION ${PROJECT_VERSION} NAMESPACE ${PROJECT_NAME}
+  VERSION ${PROJECT_VERSION}
+  NAMESPACE ${PROJECT_NAME}
   BINARY_DIR ${PROJECT_BINARY_DIR}
   INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
   INCLUDE_DESTINATION include/${PROJECT_NAME}
-  VERSION_HEADER ${VERSION_HEADER_LOCATION} DISABLE_VERSION_SUFFIX YES
+  VERSION_HEADER ${VERSION_HEADER_LOCATION}
+  EXPORT_HEADER ${PROJECT_NAME}/export.h
+  DISABLE_VERSION_SUFFIX YES
   COMPATIBILITY SameMajorVersion
   # TODO: DEPENDENCIES "fmt 10.0.0"
 )

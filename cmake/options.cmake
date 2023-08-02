@@ -27,13 +27,24 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
-CPMAddPackage("gh:aminya/project_options@0.30.0")
-list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)
-include(StaticAnalyzers) # for target_disable_clang_tidy() and enable_clang_tidy()
+# XXX CPMAddPackage("gh:aminya/project_options@0.30.0")
+cmake_policy(SET CMP0097 NEW)
+CPMAddPackage(
+  NAME project_options
+  GIT_TAG v0.30.0
+  GITHUB_REPOSITORY aminya/project_options
+  # XXX GIT_MODULES "examples/cpp_vcpkg_project"
+  GIT_MODULES ""
+  # NOTE(CK): should be empty to NOT initializes submodules! See policy CMP0097.
+)
+if(project_options_SOURCE_DIR)
+  list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)
+  include(StaticAnalyzers) # for target_disable_clang_tidy() and enable_clang_tidy()
 
-if(OPT_ENABLE_CLANG_TIDY)
-  set(ProjectOptions_ENABLE_PCH OFF)
-  enable_clang_tidy("")
+  if(OPT_ENABLE_CLANG_TIDY)
+    set(ProjectOptions_ENABLE_PCH OFF)
+    enable_clang_tidy("")
+  endif()
 endif()
 
 # Disable clang-tidy for target
