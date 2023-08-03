@@ -53,6 +53,11 @@
     {
       "name": "default",
       "configurePreset": "default"
+    },
+    {
+      "name": "install",
+      "configurePreset": "default",
+      "targets": ["install"]
     }
   ],
   "testPresets": [
@@ -87,6 +92,10 @@
         {
           "type": "test",
           "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "install"
         }
       ]
     }
