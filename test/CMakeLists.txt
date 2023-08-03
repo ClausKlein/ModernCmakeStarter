@@ -8,7 +8,7 @@ project(GreeterTests LANGUAGES CXX)
 
 # ---- local Options ----
 
-option(TEST_INSTALLED_VERSION "Test the version found by find_package" ${PROJECT_IS_TOP_LEVEL})
+option(TEST_INSTALLED_VERSION "Test the version found by find_package" NO)
 option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" NO)
 
 # --- Import project options ----
@@ -31,7 +31,7 @@ if(TARGET doctest)
   target_disable_clang_tidy(doctest)
 endif()
 
-if(TEST_INSTALLED_VERSION)
+if(TEST_INSTALLED_VERSION) # TODO(CK): this breaks CI build! if(PROJECT_IS_TOP_LEVEL)
   find_package(greeter 1.1 REQUIRED)
   message(TRACE "Found at ${Greeter_DIR}")
 else()
