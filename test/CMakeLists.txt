@@ -9,6 +9,7 @@ project(GreeterTests LANGUAGES CXX)
 # ---- local Options ----
 
 option(TEST_INSTALLED_VERSION "Test the version found by find_package" ${PROJECT_IS_TOP_LEVEL})
+option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" NO)
 
 # --- Import project options ----
 
@@ -24,7 +25,7 @@ CPMAddPackage(
   VERSION "2.4.11"
   EXCLUDE_FROM_ALL OFF
   SYSTEM YES # used in case of cmake v3.25
-  OPTIONS "DOCTEST_NO_INSTALL NO"
+  OPTIONS "DOCTEST_NO_INSTALL ${CMAKE_SKIP_INSTALL_RULES}"
 )
 if(TARGET doctest)
   target_disable_clang_tidy(doctest)
