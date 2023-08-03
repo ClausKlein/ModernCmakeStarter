@@ -7,6 +7,8 @@ project(BuildAll LANGUAGES CXX)
 
 # ---- local Options ----
 
+option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" YES)
+
 # Note: by default ENABLE_DEVELOPER_MODE is True. This means that all analysis (sanitizers, static
 # analysis) is enabled and all warnings are treated as errors. if you want to switch this behavior,
 # change TRUE to FALSE

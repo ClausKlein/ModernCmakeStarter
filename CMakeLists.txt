@@ -31,10 +31,7 @@ include(GNUInstallDirs)
 
 # ---- local Options ----
 
-if(NOT PROJECT_IS_TOP_LEVEL)
-  message(WARNING "set(CMAKE_SKIP_INSTALL_RULES YES)")
-  option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" YES)
-endif()
+option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" NO)
 
 # --- Import project options ----
 
