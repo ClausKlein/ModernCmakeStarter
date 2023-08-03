@@ -19,7 +19,7 @@ parse:
         GITHUB_REPOSITORY: 1
         GITLAB_REPOSITORY: 1
         GIT_REPOSITORY: 1
-        GIT_MODULES: 1
+        GIT_SUBMODULES: 1
         SVN_REPOSITORY: 1
         SVN_REVISION: 1
         SOURCE_DIR: 1
