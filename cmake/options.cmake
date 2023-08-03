@@ -27,15 +27,15 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
-# XXX CPMAddPackage("gh:aminya/project_options@0.30.0")
 # NOTE(CK): Set GIT_SUBMODULES to empty string to NOT initializes submodules!
 cmake_policy(SET CMP0097 NEW)
 CPMAddPackage(
   NAME project_options
   GIT_TAG v0.30.0
-  GITHUB_REPOSITORY
-    aminya/project_options # XXX GIT_SUBMODULES "examples/cpp_vcpkg_project" # See policy CMP0097.
-    GIT_SUBMODULES ""
+  GITHUB_REPOSITORY aminya/project_options
+  # FIXME: GIT_SUBMODULES ""
+  GIT_SUBMODULES "docs"
+  # NOTE(CK): Workaround existing dir to prevent load of submodule
 )
 if(project_options_SOURCE_DIR)
   list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)

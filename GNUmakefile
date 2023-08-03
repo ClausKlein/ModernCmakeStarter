@@ -29,7 +29,7 @@ check: setup
 	run-clang-tidy -extra-arg=-Wno-unknown-warning-option -p $(BUILD_DIR)/all source */source
 
 setup:
-	cd all && cmake --preset default #XXX --log-level=TRACE --trace-expand --trace-source=CPM.cmake
+	cd all && cmake --preset default #XXX --log-level=TRACE --trace-expand --trace-source=CPM_0.38.2.cmake
 #XXX	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' \
 #XXX	-e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $(BUILD_DIR)/all/compile_commands.json
 
