@@ -27,7 +27,7 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
-# NOTE(CK): Set GIT_SUBMODULES to empty string to NOT initializes submodules!
+# NOTE(CK): Set GIT_SUBMODULES to empty string to NOT initialize submodules!
 cmake_policy(SET CMP0097 NEW)
 CPMAddPackage(
   NAME project_options
