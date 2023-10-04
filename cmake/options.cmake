@@ -9,7 +9,9 @@ endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_DEBUG_POSTFIX D)
-set(CMAKE_DEPFILE_FLAGS_CXX "-MMD")
+if(UNIX AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  set(CMAKE_DEPFILE_FLAGS_CXX "-MMD -MT <DEP_TARGET> -MF <DEP_FILE>")
+endif()
 
 option(OPTION_ENABLE_UNITY "Enable Unity builds of project" ON)
 option(OPTION_ENABLE_CLANG_TIDY "Enable clang-tdiy as prebuild step" OFF)
