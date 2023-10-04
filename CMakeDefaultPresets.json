@@ -1,8 +1,8 @@
 {
-  "version": 6,
+  "version": 7,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 25,
+    "minor": 27,
     "patch": 0
   },
   "configurePresets": [
@@ -30,6 +30,9 @@
       "warnings": {
         "deprecated": true,
         "uninitialized": false
+      },
+      "trace": {
+        "mode": "off"
       }
     }
   ],
