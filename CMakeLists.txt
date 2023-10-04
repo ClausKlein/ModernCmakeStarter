@@ -105,8 +105,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-
 # target_include_directories with the SYSTEM modifier will request the compiler to omit warnings
 # from the provided paths, if the compiler supports that
 target_include_directories(
-  ${PROJECT_NAME} SYSTEM PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-                                $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 if(CMAKE_SKIP_INSTALL_RULES OR CMAKE_BUILD_TYPE STREQUAL "Debug")
