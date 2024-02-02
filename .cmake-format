@@ -19,6 +19,7 @@ parse:
         GITHUB_REPOSITORY: 1
         GITLAB_REPOSITORY: 1
         GIT_REPOSITORY: 1
+        GIT_SUBMODULES: 1
         SVN_REPOSITORY: 1
         SVN_REVISION: 1
         SOURCE_DIR: 1
@@ -56,11 +57,15 @@ parse:
       spelling: packageProject
       kwargs:
         NAME: 1
-        VERSION: 1
         INCLUDE_DIR: 1
         INCLUDE_DESTINATION: 1
+        INCLUDE_HEADER_PATTERN: 1
         BINARY_DIR: 1
         COMPATIBILITY: 1
+        DISABLE_VERSION_SUFFIX: 1
+        EXPORT_HEADER: 1
+        NAMESPACE: 1
+        VERSION: 1
         VERSION_HEADER: 1
         DEPENDENCIES: +
     cpmusepackagelock:
@@ -72,3 +77,15 @@ parse:
     cpmgetpackageversion:
       pargs: 2
       spelling: CPMGetPackageVersion
+    project_options:
+      pargs:
+        nargs: '*'
+        flags: [ENABLE_CACHE]
+      kwargs:
+        PREFIX: 1
+    dynamic_project_options:
+      pargs:
+        nargs: '*'
+        flags: [ENABLE_CACHE]
+      kwargs:
+        PREFIX: 1

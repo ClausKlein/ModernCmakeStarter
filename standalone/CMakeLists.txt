@@ -3,12 +3,9 @@ cmake_minimum_required(VERSION 3.21...3.26)
 project(GreeterStandalone LANGUAGES CXX)
 
 if(PROJECT_IS_TOP_LEVEL AND CMAKE_BUILD_TYPE STREQUAL "Release")
-  set(CMAKE_SKIP_INSTALL_RULES
-      NO
-      CACHE BOOL "Forced generation of installation rules" FORCE
-  )
-else()
-  message(WARNING "set(CMAKE_SKIP_INSTALL_RULES YES)")
+  option(CXXOPTS_ENABLE_INSTALL "install cxxopts" YES)
+elseif(CMAKE_SKIP_INSTALL_RULES)
+  option(CXXOPTS_ENABLE_INSTALL "Install cxxopts" NO)
 endif()
 
 # --- Import project options ----
@@ -23,7 +20,7 @@ CPMAddPackage(
   VERSION 3.1.1
   EXCLUDE_FROM_ALL NO
   SYSTEM YES # used in case of cmake v3.25
-  OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
+  OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO"
 )
 if(TARGET cxxopts)
   target_disable_clang_tidy(cxxopts)
@@ -56,6 +53,10 @@ enable_testing()
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME} --help)
 add_test(NAME ${PROJECT_NAME}-de COMMAND ${PROJECT_NAME} --lang=de)
 add_test(NAME ${PROJECT_NAME}-err COMMAND ${PROJECT_NAME} --lang=err)
+
+if(CMAKE_SKIP_INSTALL_RULES)
+  return()
+endif()
 
 # --- Install it ---
 

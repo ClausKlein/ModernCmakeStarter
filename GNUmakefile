@@ -18,7 +18,7 @@ BUILD_DIR:=$(shell realpath $(CURDIR)/build)
 
 .PHONY: setup all test gcov install lib_install test_install standalone documentation clean distclean check format
 all: install
-	cd all && cmake --preset default --debug-find-pkg=greeter
+	#XXX cd all && cmake --preset default --debug-find-pkg=greeter
 	cd all && cmake --workflow --preset default
 
 test: setup
@@ -29,7 +29,7 @@ check: setup
 	run-clang-tidy -extra-arg=-Wno-unknown-warning-option -p $(BUILD_DIR)/all source */source
 
 setup:
-	cd all && cmake --preset default --log-level=TRACE --trace-expand --trace-source=CPM.cmake
+	cd all && cmake --preset default #XXX --log-level=TRACE --trace-expand --trace-source=CPM_0.38.2.cmake
 #XXX	perl -i.bak -p -e 's#-W[-\w]+(=\d)?\b##g;' \
 #XXX	-e 's#-I(${CPM_SOURCE_CACHE})#-isystem $$1#g;' $(BUILD_DIR)/all/compile_commands.json
 
@@ -64,5 +64,7 @@ distclean: #XXX clean
 
 format: setup
 	cmake --build $(BUILD_DIR)/all --target $@
+	clang-format -i *.json */*.json
+	git-clang-format .
 
 ################################
