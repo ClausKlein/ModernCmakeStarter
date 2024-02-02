@@ -5,14 +5,14 @@
 #include <string>
 
 TEST_CASE("Greeter") {
-  using namespace greeter;
+    using namespace greeter;
 
-  Greeter greeter("Tests");
+    Greeter greeter("Tests");
 
-  CHECK(greeter.greet(LanguageCode::EN) == "Hello, Tests!");
-  CHECK(greeter.greet(LanguageCode::DE) == "Hallo Tests!");
-  CHECK(greeter.greet(LanguageCode::ES) == "¡Hola Tests!");
-  CHECK(greeter.greet(LanguageCode::FR) == "Bonjour Tests!");
+    CHECK(greeter.greet(LanguageCode::EN) == "Hello, Tests!");
+    CHECK(greeter.greet(LanguageCode::DE) == "Hallo Tests!");
+    CHECK(greeter.greet(LanguageCode::ES) == "¡Hola Tests!");
+    CHECK(greeter.greet(LanguageCode::FR) == "Bonjour Tests!");
 }
 
 // TEST_CASE("Greeter version") {

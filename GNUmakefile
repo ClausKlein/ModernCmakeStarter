@@ -64,5 +64,7 @@ distclean: #XXX clean
 
 format: setup
 	cmake --build $(BUILD_DIR)/all --target $@
+	clang-format -i *.json */*.json
+	git-clang-format .
 
 ################################
