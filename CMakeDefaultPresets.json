@@ -12,8 +12,8 @@
       "description": "Default build using Ninja generator",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/user",
-      "installDir": "${sourceDir}/stagedir",
       "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/stagedir",
         "CMAKE_PREFIX_PATH": {
           "type": "path",
           "value": "${sourceDir}/stagedir"
@@ -24,7 +24,7 @@
         "BUILD_SHARED_LIBS": "NO"
       },
       "environment": {
-        "CPM_USE_LOCAL_PACKAGES": "NO",
+        "CPM_USE_LOCAL_PACKAGES": "YES",
         "PATH": "$env{HOME}/.local/bin${pathListSep}$penv{PATH}"
       },
       "warnings": {

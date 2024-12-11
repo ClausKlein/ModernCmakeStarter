@@ -2,7 +2,7 @@
 # This project enables the developer to build, test, install the project. It is strongly recommended
 # to test the exported cmake config package too!
 #
-cmake_minimum_required(VERSION 3.21...3.26)
+cmake_minimum_required(VERSION 3.21...3.31)
 
 project(GreeterTests LANGUAGES CXX)
 
