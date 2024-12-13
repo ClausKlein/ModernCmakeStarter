@@ -8,7 +8,8 @@ project(GreeterTests LANGUAGES CXX)
 
 # ---- local Options ----
 
-option(TEST_INSTALLED_VERSION "Test the version found by find_package" OFF)
+option(TEST_INSTALLED_VERSION "Test the version found by find_package" NO)
+option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" NO)
 
 # --- Import project options ----
 
@@ -18,17 +19,19 @@ include(../cmake/options.cmake)
 
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 
-# XXX CPMAddPackage("gh:doctest/doctest@2.4.9")
+# NOTE: EXCLUDE_FROM_ALL must be OFF or doctest target will NOT be installed! CK
 CPMAddPackage(
   GITHUB_REPOSITORY "doctest/doctest"
   VERSION "2.4.11"
+  EXCLUDE_FROM_ALL OFF
   SYSTEM YES # used in case of cmake v3.25
+  OPTIONS "DOCTEST_NO_INSTALL ${CMAKE_SKIP_INSTALL_RULES}"
 )
 if(TARGET doctest)
   target_disable_clang_tidy(doctest)
 endif()
 
-if(TEST_INSTALLED_VERSION) # TODO(CK): or if(PROJECT_IS_TOP_LEVEL)
+if(TEST_INSTALLED_VERSION) # TODO(CK): this breaks CI build! if(PROJECT_IS_TOP_LEVEL)
   find_package(greeter 1.1 REQUIRED)
   message(TRACE "Found at ${Greeter_DIR}")
 else()
@@ -41,7 +44,7 @@ endif()
 
 # ---- Create binary ----
 
-# XXX file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+# DO NOT USE! file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 set(_sources source/main.cpp source/greeter.cpp)
 
 add_executable(${PROJECT_NAME} ${_sources})

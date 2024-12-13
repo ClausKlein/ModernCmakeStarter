@@ -21,8 +21,8 @@
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_DEBUG_POSTFIX": "D",
-        "CPM_USE_LOCAL_PACKAGES": "YES",
-        "BUILD_SHARED_LIBS": "YES"
+        "CPM_USE_LOCAL_PACKAGES": true,
+        "BUILD_SHARED_LIBS": true
       },
       "environment": {
         "CPM_USE_LOCAL_PACKAGES": "YES",
@@ -56,15 +56,22 @@
     {
       "name": "install",
       "configurePreset": "default",
-      "targets": ["install"]
+      "targets": [
+        "install"
+      ]
     }
   ],
   "testPresets": [
     {
       "name": "default",
       "configurePreset": "default",
-      "output": {"outputOnFailure": true},
-      "execution": {"noTestsAction": "error", "stopOnFailure": true}
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
     }
   ],
   "packagePresets": [

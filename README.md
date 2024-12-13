@@ -17,7 +17,7 @@ This project is the result of learnings from many previous projects and should h
 ## Features
 
 - [How to Use CMake Without the Agonizing Pain](https://alexreinking.com/blog/how-to-use-cmake-without-the-agonizing-pain-part-1.html) Note the Resources sections!
-- [Modern CMake practices](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/) Noteable if you want to use project without CMake config package exports
+- [Modern CMake practices](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/) Notable if you want to use project without CMake config package exports
 - Suited for single header libraries and projects of any scale
 - Clean separation of library and executable code
 - Integrated test suite
@@ -178,7 +178,7 @@ make standalone
 ./build/standalone/greeter --help
 ```
 
-### Build and test the installed Release version of the libray
+### Build and test the installed Release version of the library
 
 see [test/CMakeLists.txt](test/CMakeLists.txt)
 and [test/CMakePresets.json](test/CMakePresets.json)
@@ -308,7 +308,7 @@ Simply remove the standalone / documentation directory and according github work
 > Can I build the standalone and tests at the same time? / How can I tell my IDE about all subprojects?
 
 To keep the project modular, all subprojects derived from the library have been separated into their own CMake modules.
-This approach makes it trivial for third-party projects to re-use the projects library code.
+This approach makes it trivial for third-party projects to reuse the projects library code.
 To allow IDEs to see the full scope of the project, the project includes the `all` directory that will create a single build for all subprojects.
 Use this as the main directory for best IDE support.
 

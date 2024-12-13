@@ -31,10 +31,7 @@ include(GNUInstallDirs)
 
 # ---- local Options ----
 
-if(NOT PROJECT_IS_TOP_LEVEL)
-  message(WARNING "set(CMAKE_SKIP_INSTALL_RULES YES)")
-  option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" YES)
-endif()
+option(CMAKE_SKIP_INSTALL_RULES "Whether to disable generation of installation rules" NO)
 
 # --- Import project options ----
 
@@ -68,12 +65,14 @@ include(DynamicProjectOptions)
 # sets `project_warnings` uncomment the options to enable them:
 # cmake-format: off
 dynamic_project_options(
+  PREFIX ${PROJECT_NAME}
+  ENABLE_CACHE
   # MSVC_WARNINGS "/permissive-" # Override the defaults for the MSVC warnings
   # CLANG_WARNINGS "-Wall;-Wextra" # Override the defaults for the CLANG warnings
   # GCC_WARNINGS "-Wextra" # Override the defaults for the GCC warnings
 )
 # cmake-format: on
-target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+target_compile_features(${PROJECT_NAME}_project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
 # ---- Add source files ----
 
@@ -97,7 +96,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${OPTION_ENABLE_UNI
 
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd for package user
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # minimum required for package user
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
@@ -106,12 +105,15 @@ target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-
 # target_include_directories with the SYSTEM modifier will request the compiler to omit warnings
 # from the provided paths, if the compiler supports that
 target_include_directories(
-  ${PROJECT_NAME} SYSTEM PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-                                $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 if(CMAKE_SKIP_INSTALL_RULES OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-  target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:project_warnings project_options>)
+  target_link_libraries(
+    ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_NAME}_project_warnings>
+                           $<BUILD_INTERFACE:${PROJECT_NAME}_project_options>
+  )
   return()
 endif()
 
@@ -126,11 +128,14 @@ install(FILES test.cfg DESTINATION ${CMAKE_INSTALL_SYSCONFDIR})
 
 packageProject(
   NAME ${PROJECT_NAME}
-  VERSION ${PROJECT_VERSION} NAMESPACE ${PROJECT_NAME}
+  VERSION ${PROJECT_VERSION}
+  NAMESPACE ${PROJECT_NAME}
   BINARY_DIR ${PROJECT_BINARY_DIR}
   INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
   INCLUDE_DESTINATION include/${PROJECT_NAME}
-  VERSION_HEADER ${VERSION_HEADER_LOCATION} DISABLE_VERSION_SUFFIX YES
+  VERSION_HEADER ${VERSION_HEADER_LOCATION}
+  EXPORT_HEADER ${PROJECT_NAME}/export.h
+  DISABLE_VERSION_SUFFIX YES
   COMPATIBILITY SameMajorVersion
   # TODO: DEPENDENCIES "fmt 10.0.0"
 )
