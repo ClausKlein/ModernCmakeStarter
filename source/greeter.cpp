@@ -6,7 +6,7 @@ using greeter::Greeter;
 
 Greeter::Greeter(std::string _name) : name(std::move(_name)) {}
 
-std::string Greeter::greet(LanguageCode lang) const {
+[[nodiscard]] std::string Greeter::greet(LanguageCode lang) const {
     switch (lang) {
         default:
         case LanguageCode::EN:

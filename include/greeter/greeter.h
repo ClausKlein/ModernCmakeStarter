@@ -18,7 +18,7 @@ namespace greeter {
          * @brief Creates a new greeter
          * @param name the name to greet
          */
-        Greeter(std::string name);
+        explicit Greeter(std::string name);
 
         /**
          * @brief Creates a localized string containing the greeting

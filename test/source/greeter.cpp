@@ -5,7 +5,8 @@
 #include <string>
 
 TEST_CASE("Greeter") {
-    using namespace greeter;
+    using greeter::Greeter;
+    using greeter::LanguageCode;
 
     Greeter greeter("Tests");
 
