@@ -8,7 +8,7 @@ TEST_CASE("Greeter") {
     using greeter::Greeter;
     using greeter::LanguageCode;
 
-    Greeter greeter("Tests");
+    const Greeter greeter("Tests");
 
     CHECK(greeter.greet(LanguageCode::EN) == "Hello, Tests!");
     CHECK(greeter.greet(LanguageCode::DE) == "Hallo Tests!");

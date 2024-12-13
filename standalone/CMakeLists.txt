@@ -17,7 +17,7 @@ include(../cmake/options.cmake)
 # NOTE: EXCLUDE_FROM_ALL has to be OFF or cxxopts target may NOT be installed! CK
 CPMAddPackage(
   GITHUB_REPOSITORY jarro2783/cxxopts
-  VERSION 3.1.1
+  VERSION 3.2.1
   EXCLUDE_FROM_ALL NO
   SYSTEM YES # used in case of cmake v3.25
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO"
@@ -34,7 +34,7 @@ CPMAddPackage(
 
 # ---- Add source files ----
 
-# XXX file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+# DO NO USE! file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 set(_sources source/main.cpp)
 
 # ---- Create standalone executable ----

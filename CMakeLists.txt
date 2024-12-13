@@ -96,7 +96,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES UNITY_BUILD ${OPTION_ENABLE_UNI
 
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # mimimum requierd for package user
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) # minimum required for package user
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)

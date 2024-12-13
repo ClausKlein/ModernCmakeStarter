@@ -1,6 +1,9 @@
 ---
-  # clang-format v12.0.0
+  # clang-format v12.0.0 or newer
   BasedOnStyle: Google
+  IndentWidth: '2'
+---
+  Language: Cpp
   AccessModifierOffset: '-2'
   AlignTrailingComments: 'true'
   AllowAllParametersOfDeclarationOnNextLine: 'false'

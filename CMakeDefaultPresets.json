@@ -21,7 +21,8 @@
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_DEBUG_POSTFIX": "D",
-        "BUILD_SHARED_LIBS": "NO"
+        "OPTION_ENABLE_UNITY": true,
+        "BUILD_SHARED_LIBS": false
       },
       "environment": {
         "CPM_USE_LOCAL_PACKAGES": "YES",
@@ -44,20 +45,30 @@
     {
       "name": "install",
       "configurePreset": "default",
-      "targets": ["install"]
+      "targets": [
+        "install"
+      ]
     },
     {
       "name": "format",
       "configurePreset": "default",
-      "targets": ["fix-clang-format", "fix-cmake-format"]
+      "targets": [
+        "fix-clang-format",
+        "fix-cmake-format"
+      ]
     }
   ],
   "testPresets": [
     {
       "name": "default",
       "configurePreset": "default",
-      "output": {"outputOnFailure": true},
-      "execution": {"noTestsAction": "error", "stopOnFailure": true}
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
     }
   ],
   "packagePresets": [

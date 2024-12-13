@@ -44,7 +44,7 @@ endif()
 
 # ---- Create binary ----
 
-# XXX file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+# DO NOT USE! file(GLOB _sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 set(_sources source/main.cpp source/greeter.cpp)
 
 add_executable(${PROJECT_NAME} ${_sources})

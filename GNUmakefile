@@ -16,7 +16,7 @@ STAGE_DIR:=$(shell realpath $(CURDIR)/stagedir)
 BUILD_DIR:=$(shell realpath $(CURDIR)/build)
 ####################################
 
-.PHONY: setup all test gcov install lib_install test_install standalone documentation clean distclean check format
+.PHONY: setup all test gcov install lib_install test_install standalone documentation clean distclean check fixme format
 all: install
 	#XXX cd all && cmake --preset default --debug-find-pkg=greeter
 	cd all && cmake --workflow --preset default
@@ -27,6 +27,13 @@ test: setup
 
 check: setup
 	run-clang-tidy -extra-arg=-Wno-unknown-warning-option -p $(BUILD_DIR)/all source */source
+
+# TODO(CK): Why doesn't this check/fix all files?
+fixme:
+	rm -rf $(STAGE_DIR)
+	cd all && cmake --preset default --fresh
+	run-clang-tidy -extra-arg=-Wno-unknown-warning-option -p $(BUILD_DIR)/all \
+	  -checks='-*,performance-avoid-endl,modernize-use-nodiscard,misc-const-correctness' $(CURDIR)
 
 setup:
 	cd all && cmake --preset default #XXX --log-level=TRACE --trace-expand --trace-source=CPM_0.38.2.cmake

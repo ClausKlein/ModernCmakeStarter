@@ -1,11 +1,12 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 namespace greeter {
 
     /**  Language codes to be used with the Greeter class */
-    enum class LanguageCode { EN, DE, ES, FR };
+    enum class LanguageCode : std::uint8_t { EN, DE, ES, FR };
 
     /**
      * @brief A class for saying hello in multiple languages
@@ -25,7 +26,7 @@ namespace greeter {
          * @param lang the language to greet in
          * @return a string containing the greeting
          */
-        std::string greet(LanguageCode lang = LanguageCode::EN) const;
+        [[nodiscard]] std::string greet(LanguageCode lang = LanguageCode::EN) const;
     };
 
 }  // namespace greeter
