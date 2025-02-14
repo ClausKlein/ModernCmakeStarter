@@ -10,7 +10,7 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_DEBUG_POSTFIX D)
 
-option(OPTION_ENABLE_UNITY "Enable Unity builds of project" ON)
+option(OPTION_ENABLE_UNITY "Enable Unity builds of project" OFF)
 option(OPTION_ENABLE_CLANG_TIDY "Enable clang-tdiy as prebuild step" OFF)
 
 if(OPTION_ENABLE_CLANG_TIDY)
@@ -27,7 +27,7 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
-CPMAddPackage("gh:aminya/project_options@0.36.2")
+CPMAddPackage("gh:aminya/project_options@0.40.0")
 list(APPEND CMAKE_MODULE_PATH ${project_options_SOURCE_DIR}/src)
 include(StaticAnalyzers) # for target_disable_clang_tidy() and enable_clang_tidy()
 

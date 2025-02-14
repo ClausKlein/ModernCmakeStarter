@@ -1,7 +1,7 @@
 #
 # this project is for using as a sub project with add_subdirectory() or with CPMAddPackage()
 #
-cmake_minimum_required(VERSION 3.21...3.31)
+cmake_minimum_required(VERSION 3.25...3.31)
 
 # Not ideal to use this global variable, but necessary to make sure that tooling and projects use
 # the same version
@@ -43,7 +43,7 @@ include(cmake/options.cmake)
 # ---- Add dependencies via CPM ----
 
 # PackageProject.cmake will be used to make our target installable
-CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.12.0")
+CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.13.0")
 
 # NOTE: The fmt library has to be installed if not found! BUT either clang-tidy checks nor compiler
 # warnings are wanted!
@@ -52,7 +52,7 @@ CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.12.0")
 option(FMT_INSTALL "create an installable target" YES)
 CPMAddPackage(
   NAME fmt
-  GIT_TAG 11.0.2
+  GIT_TAG 11.1.3
   GITHUB_REPOSITORY fmtlib/fmt
   EXCLUDE_FROM_ALL OFF
   SYSTEM YES # used in case of cmake v3.25
@@ -132,7 +132,7 @@ packageProject(
   INCLUDE_DESTINATION include/${PROJECT_NAME}
   VERSION_HEADER ${VERSION_HEADER_LOCATION} DISABLE_VERSION_SUFFIX YES
   COMPATIBILITY SameMajorVersion
-  # TODO: DEPENDENCIES "fmt 10.0.0"
+  # TODO: DEPENDENCIES "fmt 11.1.3"
 )
 
 include(cmake/AddUninstallTarget.cmake)

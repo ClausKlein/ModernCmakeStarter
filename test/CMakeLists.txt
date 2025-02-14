@@ -2,7 +2,7 @@
 # This project enables the developer to build, test, install the project. It is strongly recommended
 # to test the exported cmake config package too!
 #
-cmake_minimum_required(VERSION 3.21...3.31)
+cmake_minimum_required(VERSION 3.25...3.31)
 
 project(GreeterTests LANGUAGES CXX)
 
@@ -16,9 +16,9 @@ include(../cmake/options.cmake)
 
 # ---- Dependencies ----
 
-CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
+CPMAddPackage("gh:TheLartians/Format.cmake@1.8.3")
 
-# XXX CPMAddPackage("gh:doctest/doctest@2.4.9")
+# XXX CPMAddPackage("gh:doctest/doctest@2.4.11")
 CPMAddPackage(
   GITHUB_REPOSITORY "doctest/doctest"
   VERSION "2.4.11"
